@@ -14,8 +14,7 @@ in this block, and cannot be used. However it can become free, after the call to
 
 - 'next' - will be pointing to the next block . Initially 'next' is NULL
 
-
-- When mymalloc is being called, we want to be able to see if it was called before or not (because if it wasn't , then
+When mymalloc is being called, we want to be able to see if it was called before or not (because if it wasn't , then
 there are no entries in the array, and trying to check entry's fields will cause an error). That's why the code checks 
 if myblock[0]-myblock[3] are equal to some value . 
 	- If it's not, than mymalloc is being called for the first time, so we initialize myblock[0]-myblock[3] for future
