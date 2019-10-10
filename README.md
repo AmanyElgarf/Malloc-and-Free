@@ -45,5 +45,5 @@ Side notes:
 - Because myblock array is of type char, to have inside of it data of any other types(int , struct etc) we
 need to cast it. 
 - I used __attribute__((__packed__)) while defining struct, this allows us to save space ( the char value 
-'free' will not be padded to 8 , so instead of 24, struct will only take 17 bytes.) :cat:
+'free' will not be padded to 8 , so instead of 24, struct will only take 13 bytes.) :cat:
 
