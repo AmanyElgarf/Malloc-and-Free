@@ -19,14 +19,11 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		if (size>(4096-sizeof(entry)-6)) {
 			printf("Cannot allocate that amount of space, try asking for less.\n");
 			return NULL;
-		} else if (size==0) {
-			printf("cannot allocate for 0 bytes\n");
-			return NULL;
 		}
-		num = 4096-size-sizeof(entry)-6;	//'num' holds total amount of available memory
-		myblock[4] = (char)(num/100);		//splitting and storing num in 5th and 6th elements of array
+		num = 4096-size-sizeof(entry)-6;	
+		myblock[4] = (char)(num/100);
 		myblock[5] = (char)(num%100);
-		entry first_entry;		//create metadata for first block 
+		entry first_entry;		//create first block , with metadata
 		first_entry.blockSize= size;
 		first_entry.free = '0';
 		first_entry.next = NULL;
@@ -39,20 +36,17 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		entry* currEntry ;
 		entry* newEntry;
 		num = (int)myblock[4]*100+(int)myblock[5];	//largest available memory block
-		if (num<(size+sizeof(entry))) {	//in case user asks too much
+		if (num<(size+sizeof(entry))) {
 			int memMinusMeta = num-sizeof(entry)>0 ? num-sizeof(entry) : 0 ;
 			printf("Not enough memory. You have only %d bytes available\n", (int)(memMinusMeta)); 
 			return NULL;
-		} else if (size==0) {	//in case if user asks 0 
-			printf("Cannot allocate 0 bytes\n");
-			return NULL;
-		}else {
+		} else {
 			int ind = 6;	//this index for keeping track on what position in array myblock we currently are
 			//here we need to start searching for the block of right size
-			currEntry = (entry*)&myblock[6];	//create currEntry for traversing through the metadata
+			currEntry = (entry*)&myblock[6];
 			while (1) {
 				if (currEntry->blockSize>=(size+sizeof(entry)) && currEntry->free=='1') {	//if found large enough block that was freed before
-					if (currEntry->blockSize>=(size+sizeof(entry)+1)) {	// check if block is big enough to split into 2 blocks
+					if (currEntry->blockSize>=(size+sizeof(entry)+1)) {	// if block is big enough to split into 2 blocks
 						
 						newEntry = (entry*)&myblock[ind+sizeof(entry)+size];
 						
@@ -123,7 +117,6 @@ int main(int argc, char* argv[]) {
 	malloc(15);
 	malloc(67);
 	malloc(120);
-	malloc(0);
 	printf("\nAll the allocated blocks are:\n");
 	e = (entry*)&myblock[6];
 	do {
@@ -132,3 +125,4 @@ int main(int argc, char* argv[]) {
 	} while (e!=NULL);
 	return 0;
 }
+
