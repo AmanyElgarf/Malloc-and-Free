@@ -14,10 +14,9 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		myblock[1]=(char)111;
 		myblock[2]=(char)52;
 		myblock[3]=(char)241;	//mymalloc is called first time, so we need to assign value to mybloc[0]
-		printf("The size of entry is %d\n",(int)sizeof(entry));
 		if (size>(4096-sizeof(entry)-6)) {
 			printf("Cannot allocate that amount of space, try asking for less.\n");
-			return 0;
+			return NULL;
 		}
 		num = 4096-size-sizeof(entry)-6;	
 		myblock[4] = (char)(num/100);
@@ -29,8 +28,8 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		*(entry*)(myblock+6) = first_entry;
 		printf("Allocated %d bytes at %d position\n",(int)size,(int)(6+sizeof(entry)));
 		return &myblock[6+sizeof(entry)]; // (or &myblock[5+sizeof(entry)])???? 
-	} else {	//if we got here, than mymalloc was called before. Need to search whether we can find the block of 
-				//free memory in myblock of needed size(including metadata size, which is sizeof(entry))
+	} else {	//if we got here, than mymalloc was called before. Will search for large enough block of 
+				//free memory (including metadata size, which is sizeof(entry))
 		entry* anotherEntry;
 		entry* currEntry ;
 		entry* newEntry;
@@ -44,8 +43,11 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 			//here we need to start searching for the block of right size
 			currEntry = (entry*)&myblock[6];
 			while (1) {
-				if (currEntry->blockSize>=(size+sizeof(entry)) && currEntry->free=='1') {
+				if (currEntry->blockSize>=(size+sizeof(entry)) && currEntry->free=='1') {	//if found large enough block that was freed before
 					if (currEntry->blockSize>=(size+sizeof(entry)+1)) {	// if block is big enough to split into 2 blocks
+						
+						newEntry = (entry*)&myblock[ind+sizeof(entry)+size];
+						
 						newEntry->blockSize = (currEntry->blockSize)-size-sizeof(entry);
 						newEntry->free='1';
 						newEntry->next = currEntry->next;
@@ -64,7 +66,6 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						myblock[5] = (char)(num%100);
 						return &myblock[ind+sizeof(entry)];
 					}
-
 				} else {
 					if ( currEntry->next!=NULL ) {	//there are more nodes ahead
 						ind = ind + currEntry->blockSize+sizeof(entry);
@@ -73,21 +74,17 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						anotherEntry = (entry*)&myblock[ind+sizeof(entry)+currEntry->blockSize];
 						anotherEntry->next = currEntry->next;
 						anotherEntry->free = '1'; 
-						anotherEntry->next = NULL;
 						int k = (int)currEntry->blockSize;
 						int s = 4096-( ind + 2*(int)sizeof(entry)+k);
 						anotherEntry->blockSize = s;
 						if (anotherEntry->blockSize>=size) {  //check if need to split
 							anotherEntry->free='0';
-							if (anotherEntry->blockSize>(size+sizeof(entry) +1)) {
-								anotherEntry->blockSize = size;
-							}
+							if (anotherEntry->blockSize>(size+sizeof(entry) +1))  { anotherEntry->blockSize = size; }
 							num = myblock[4]*100+myblock[5];
 							num = num - (anotherEntry->blockSize+sizeof(entry));
 							currEntry->next = anotherEntry;			//because of this linking, currEntry is now linked to anotherEntry
 							myblock[4] = (char)(num/100);
 							myblock[5] = (char)(num%100);
-							// printf("")
 							printf("location of %d bytes block is %d.\n",anotherEntry->blockSize,(int)(ind+sizeof(entry)*2+currEntry->blockSize));
 							int p = (int)(ind+currEntry->blockSize+2*sizeof(entry));
 							return &(myblock[p]);
@@ -98,8 +95,7 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 					}	
 				} 
 			}
-		}
-		
+		}	
 	}
 	return NULL;
 }
