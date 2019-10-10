@@ -25,10 +25,10 @@ if myblock[0]-myblock[3] are equal to some value .
 	list, there is still unused chunk of memory. I was thinking if we should have a value at the beginning of 
 	'myblock' array, like myblock[5], that will indicate the size of the largest block available in the array . So
 	each time when mymalloc is called, the function 'find_a_block()' will only be called if the size of the 
-	largest available block is not smaller than how much memory user is asking for. That is not necessary feature,
+	largest available block is not smaller than how much memory user is asking for. That is not necessary feature 
 	but probably can improve the performance, which I think is extra points, so we get there after we done with 
 	everything else.
-	-'ind' value keeps track on where in the array we currently are, as we traverse looking for the available memory.
+	-'ind' value keeps track on where in the array we currently are, as we traverse looking for the available memory. 
 	We use 'ind' to know where the pointer should be in array, as well as where the metadata about the block will be 
 	stored.
 	- 'num' value - keeps track of how much free memory is in array. However, it is the total memory, and does not 
