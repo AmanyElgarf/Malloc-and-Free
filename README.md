@@ -35,7 +35,7 @@ largest available block is not smaller than how much memory user is asking for. 
 but probably can improve the performance, which I think is extra points, so we get there after we done with 
 everything else.
 
--'ind' value keeps track on where in the array we currently are, as we traverse looking for the available memory. 
+- 'ind' value keeps track on where in the array we currently are, as we traverse looking for the available memory. 
 We use 'ind' to know where the pointer should be in array, as well as where the metadata about the block will be 
 stored.
 
