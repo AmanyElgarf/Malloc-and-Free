@@ -115,11 +115,16 @@ int main(int argc, char* argv[]) {
 	int x = (int)myblock[4]*100+(int)myblock[5];
 	malloc(30);
 	entry* e = (entry*)&myblock[6];
-	malloc(40);
+	int* aa = (int*)malloc(40);
+	*(aa+1) = 5;
+	*(aa+3)=765;
+	printf("a[1] is %d, aa[3] is %d\n",*(aa+1),*(aa+3));
 	malloc(25);
 	malloc(10);
 	malloc(10);
-	malloc(1500);
+	malloc(15);
+	malloc(67);
+	malloc(120);
 	printf("\nAll the allocated blocks are:\n");
 	e = (entry*)&myblock[6];
 	do {
