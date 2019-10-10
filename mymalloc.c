@@ -33,7 +33,6 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 				//free memory in myblock of needed size(including metadata size, which is sizeof(entry))
 		entry* anotherEntry;
 		entry* currEntry ;
-		entry* head;
 		entry* newEntry;
 		num = (int)myblock[4]*100+(int)myblock[5];	//largest available memory block
 		if (num<(size+sizeof(entry))) {
@@ -43,8 +42,7 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		} else {
 			int ind = 6;	//this index for keeping track on what position in array myblock we currently are
 			//here we need to start searching for the block of right size
-			head = (entry*)&myblock[6];
-			currEntry = head;
+			currEntry = (entry*)&myblock[6];
 			while (1) {
 				if (currEntry->blockSize>=(size+sizeof(entry)) && currEntry->free=='1') {
 					if (currEntry->blockSize>=(size+sizeof(entry)+1)) {	// if block is big enough to split into 2 blocks
@@ -68,11 +66,9 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 					}
 
 				} else {
-				// sleep(1);
 					if ( currEntry->next!=NULL ) {	//there are more nodes ahead
 						ind = ind + currEntry->blockSize+sizeof(entry);
 						currEntry = currEntry->next;	
-						// printf("Another entry is %d\n",anotherEntry->blockSize);
 					} else {	//reached the end of the list. Check if have enough memory at the end
 						anotherEntry = (entry*)&myblock[ind+sizeof(entry)+currEntry->blockSize];
 						anotherEntry->next = currEntry->next;
@@ -99,15 +95,13 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 							printf("Could not find enough memory. Returning NULL\n");
 							return NULL;
 						}
-
-					}
-					
+					}	
 				} 
 			}
 		}
 		
 	}
-	return 0;
+	return NULL;
 }
 int main(int argc, char* argv[]) {
 	int *a;
