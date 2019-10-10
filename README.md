@@ -5,11 +5,11 @@ In mymalloc.h :
 :crescent_moon:
 In mymalloc.c: 
 I defined struct , 'entry' , that will be our metadata. For each call to mymalloc, as long as there is enough free 
-memory in array to allocate, new entry will be created. Its fields are:
-	-'blocksize'(how much memory it will hold , should be as much as user is asking)
-	-'free' . Initially, as the new entry is created, 'free' is initialized to '0',which means memory is allocated
-in this block, and cannot be used. However it can become free, after the call to 'myfree()' In that case , 		that block can be used for future allocations again. Type of free is char - for memory efficiency
-	- 'next' - will be pointing to the next block . Initially 'next' is NULL
+memory in array to allocate, new entry will be created. Its fields are :
+	- 'blocksize'(how much memory it will hold , should be as much as user is asking)
+	- 'free' . Initially, as the new entry is created, 'free' is initialized to '0',which means memory is allocated
+in this block, and cannot be used. However it can become free, after the call to 'myfree()' In that case , that block can be used for future allocations again. Type of free is char - for memory efficiency
+	-'next' - will be pointing to the next block . Initially 'next' is NULL
 
 
 - When mymalloc is being called, we want to be able to see if it was called before or not (because if it wasn't , then
