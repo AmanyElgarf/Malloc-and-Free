@@ -2,6 +2,7 @@
 In mymalloc.h :
 	I don't know for sure if code in mymalloc.h is written correctly , as it uses macros. However, when I call malloc, the call is redirected to mymalloc, which is a good thing. In general, take a look at mymalloc.h and see if I use macros and '#define' as professor mentioned in lecture that I missed. I also know that we need to write something like #ifndef, to make sure we don't include same library more than once, but we can check that later.
 
+
 In mymalloc.c: 
 	I defined struct , 'entry' , that will be our metadata. For each call to mymalloc, as long as there is enough free memory in array to allocate, new entry will be created. Its fields are:
 		-'blocksize'(how much memory it will hold , should be as much as user is asking)
@@ -42,5 +43,5 @@ In mymalloc.c:
 
 		- Because myblock array is of type char, to have inside of it data of any other types(int , struct etc) we
 		need to cast it. 
-		 - I used __attribute__((__packed__)) while defining struct, this allows us to save space ( the char value 'free' will not be padded to 8 , so instead of 24, struct will only take 17 bytes.)
+		 - I used __attribute__((__packed__)) while defining struct, this allows us to save space ( the char value 'free' will not be padded to 8 , so instead of 24, struct will only take 17 bytes.) :cat:
 
