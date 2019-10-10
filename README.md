@@ -2,7 +2,7 @@
 In mymalloc.h :
 	I don't know for sure if code in mymalloc.h is written correctly , as it uses macros. However, when I call malloc, the call is redirected to mymalloc, which is a good thing. In general, take a look at mymalloc.h and see if I use macros and '#define' as professor mentioned in lecture that I missed. I also know that we need to write something like #ifndef, to make sure we don't include same library more than once, but we can check that later.
 
-
+:crescent_moon:
 In mymalloc.c: 
 	I defined struct , 'entry' , that will be our metadata. For each call to mymalloc, as long as there is enough free 
 	memory in array to allocate, new entry will be created. Its fields are:
