@@ -122,7 +122,14 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 					if ( currEntry->next!=NULL ) {	//there are more nodes ahead
 						ind = ind + currEntry->blockSize+sizeof(entry);
 						currEntry = currEntry->next;	
-					} else {	//reached the end of the list. Check if have enough memory at the end
+					} else {
+						printf("entry's size: %d,sizeof entry : %d\n",currEntry->blockSize,(int)sizeof(entry));
+						int endOfList = (int)(ind+currEntry->blockSize+sizeof(entry));
+						printf("at the end of the list. Ind is  %d, end of list is: %d\n", ind,(int)endOfList);	//reached the end of the list. Check if have enough memory at the end
+						if ((int)(endOfList+size + sizeof(entry))>4096) {
+							printf("%s: %d: Error: Not enough space left . Returning NULL\n", filename,lineNumber);
+							return NULL;
+						}
 						anotherEntry = (entry*)&myblock[ind+sizeof(entry)+currEntry->blockSize];
 						anotherEntry->next = currEntry->next;
 						anotherEntry->free = '1'; 
@@ -152,110 +159,114 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 }
 
 int main(int argc, char* argv[]) {
-	int *a = malloc(1000);
-	*(a+1) = 5;
-	*(a+3)=765;
-	int *b = malloc(500);
-	*(b+100) = 200;
-	int *c = malloc(50);
-	*(c+20) = 10;
-	entry *e = (entry*)&myblock[6];
-	printf("---------------------------------------------------------------------------------------------\n");
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
-	free(a);
-	printf("\nafter a was freed: ------------------------------------------------------------------------\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
-	int *aa = malloc(150);
-	////////
-	printf("\nafter aa was allocated:-------------------------------------------------------------------\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
-	free(c);
-	printf("\nafter c was freed: ----------------------------------------------------------------------\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		// printf("size: %d, pointer: %p free: %c\n",e->blockSize, e->dataPtr,e->free);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
-	free(b);
-	printf("\nafter b was freed: ----------------------------------------------------------------------\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
-	int *d = malloc(1200);
-	printf("\nafter d was allocated: ------------------------------------------------------------------\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
-	free(d);
-	printf("\nafter d was freed: -----------------------------------------------------------------------\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
-	free(c);
-	printf("\nafter c were freed: ----------------------------------------------------------------------\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
-	a = malloc(888);
-	printf("\nafter a was reallocated: -----------------------------------------------------------------\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
-	b = malloc(700);
-	printf("\nafter b was reallocated: -----------------------------------------------------------------\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
-	free(b);
-	printf("\nafter b was freed: -----------------------------------------------------------------------\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
-	b = malloc(200);
-	printf("\nafter b was reallocated: -----------------------------------------------------------------\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
-		e=e->next;
-	} while (e!=NULL);
-	printf("\n");
+	// int *a = malloc(1000);
+	// *(a+1) = 5;
+	// *(a+3)=765;
+	// int *b = malloc(500);
+	// *(b+100) = 200;
+	// int *c = malloc(50);
+	// *(c+20) = 10;
+	// entry *e = (entry*)&myblock[6];
+	// printf("---------------------------------------------------------------------------------------------\n");
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	// free(a);
+	// printf("\nafter a was freed: ------------------------------------------------------------------------\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	// int *aa = malloc(150);
+	// printf("\nafter aa was allocated:-------------------------------------------------------------------\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	// free(c);
+	// printf("\nafter c was freed: ----------------------------------------------------------------------\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	// free(b);
+	// printf("\nafter b was freed: ----------------------------------------------------------------------\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	// int *d = malloc(1200);
+	// printf("\nafter d was allocated: ------------------------------------------------------------------\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	// free(d);
+	// printf("\nafter d was freed: -----------------------------------------------------------------------\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	// free(c);
+	// printf("\nafter c were freed: ----------------------------------------------------------------------\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	// a = malloc(888);
+	// printf("\nafter a was reallocated: -----------------------------------------------------------------\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	// b = malloc(700);
+	// printf("\nafter b was reallocated: -----------------------------------------------------------------\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	// free(b);
+	// printf("\nafter b was freed: -----------------------------------------------------------------------\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	// b = malloc(200);
+	// ////////
+	// printf("\nafter b was reallocated: -----------------------------------------------------------------\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf(" %d/%c| D:%d bytes at %p ||",(int)sizeof(entry),e->free,e->blockSize,e->dataPtr);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// printf("\n");
+	int *a = malloc(500);
+	int *b = malloc(1000);
+	int *c = malloc(1500);
+	int *d = malloc(1000);
+	int *e = malloc(10);
 	return 0;
 }
 
