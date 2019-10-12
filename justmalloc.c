@@ -1,5 +1,6 @@
 void *mymalloc(size_t size,char* filename,int lineNumber) {
 	int num;
+	printf("mallocing %d bytes\n",(int)size);
 	if (!(myblock[0]==(char)35&& myblock[1]==(char)111&&myblock[2]==(char)52&&myblock[3]==(char)241)) {	
 		myblock[0]=(char)35;
 		myblock[1]=(char)111;
@@ -13,6 +14,7 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 			printf("%s: %d: error:\tCannot allocate for 0 bytes\n",filename,lineNumber);
 			return NULL;
 		}
+		printf("line27\n");
 		num = 4096-size-sizeof(entry)-6;	
 		myblock[4] = (char)(num/100);
 		myblock[5] = (char)(num%100);
@@ -39,35 +41,44 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 			printf("%s: %d: error:\tCannot allocate 0 bytes\n",filename, lineNumber);
 			return NULL;
 		}else {
+			printf("line55\n");
 			int ind = 6;	//this index for keeping track on what position in array myblock we currently are
 			//here we need to start searching for the block of right size
 			currEntry = (entry*)&myblock[6];
 			while (1) {
+				printf("line59\n");
 				if (currEntry->blockSize>=(size+sizeof(entry)) && currEntry->free=='1') {
+
 					if (currEntry->blockSize>=(size+sizeof(entry)+1)) {	// if block is big enough to split into 2 blocks
+						printf("line62\n");
 						printf("currEntry blocksize is %d\n",currEntry->blockSize);
 						int a = currEntry->blockSize-(int)size-sizeof(entry);
 						printf("a is %d\n",a);
+						newEntry = (entry*)&myblock[ind+sizeof(entry)+size];
 						newEntry->blockSize = a;
+						printf("line 73\n");
 						newEntry->free='1';
 						newEntry->next = currEntry->next;
-						newEntry->dataPtr = &myblock[ind+sizeof(entry)];
+						// newEntry->dataPtr = &myblock[ind+sizeof(entry)];	????????
+						newEntry->dataPtr = &myblock[ind+sizeof(entry)*2 +size];
+						currEntry->blockSize = size;
 						currEntry->next = newEntry;
 						currEntry->free = '0';
 						num = myblock[4]*100+myblock[5];
 						num =-(size+sizeof(entry));
 						myblock[4] = (char)(num/100);
 						myblock[5] = (char)(num%100);
-						return newEntry->dataPtr;
+						// return newEntry->dataPtr;
+						return currEntry->dataPtr;
 					} else {	//block is not big enough for splitting
 						currEntry->free='0';
 						num = myblock[4]*100+myblock[5];
 						num =-(currEntry->blockSize+sizeof(entry));
 						myblock[4] = (char)(num/100);
 						myblock[5] = (char)(num%100);
-						newEntry->dataPtr = &myblock[ind+sizeof(entry)];
+						currEntry->dataPtr = &myblock[ind+sizeof(entry)];
 						printf("returning pointer %p\n",newEntry->dataPtr);
-						return newEntry->dataPtr;
+						return currEntry->dataPtr;
 					}
 
 				} else {
