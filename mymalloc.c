@@ -18,22 +18,22 @@ void myfree(void *ptr){
     entry* b = (entry*)(((char*)ptr));
     printf(" b is %p\n",b);
     if ((char*)b < (myblock+6) || (char*)b >= myblock+sizeof(myblock)){
-        printf("Error: (%p) is either not a pointer or a pointer that  was not allocated by malloc before.\n", &ptr);
+        printf("%s: %d: error: (%p) is either not a pointer or a pointer that  was not allocated by malloc before.\n",filename,lineNumber, &ptr);
         return;
     }
     
     //freeing a pointer that was already freed
     if(b->free == '1'){
-        printf("Error: pointer (%p) was freed before.\n", ptr);
+        printf("%s: %d: error: pointer (%p) was freed before.\n", filename, lineNumber,ptr);
         return;
     }
     else{
         if(b->blockSize > 4090){
-            printf("Error: You can free a pointer of size more than 4090 because we are using the first six units to store inf\n");
+            printf("%s: %d: error: You can free a pointer of size more than 4090 because we are using the first six units to store inf\n", filename, lineNumber);
             return;
         }
         entry* head = (entry*)(((char*)&myblock[6]));
-        printf("line 35: %p", head->next);
+        printf("%p", head->next);
         
         //add block space to total space
         myblock[4] = (char)((int)myblock[4] + b->blockSize/100);
@@ -96,10 +96,10 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		myblock[2]=(char)52;
 		myblock[3]=(char)241;	//mymalloc is called first time, so we need to assign value to mybloc[0]
 		if (size>(4096-sizeof(entry)-6)) {
-			printf("Cannot allocate that amount of space, try asking for less.\n");
+			printf("%s: %d: error:Cannot allocate that amount of space, try asking for less.\n", filename,lineNumber);
 			return NULL;
 		} else if (size==0) {
-			printf("cannot allocate for 0 bytes\n");
+			printf("%s: %d: error: Cannot allocate for 0 bytes\n",filename,lineNumber);
 			return NULL;
 		}
 		num = 4096-size-sizeof(entry)-6;	//'num' holds total amount of available memory
@@ -120,10 +120,10 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		num = (int)myblock[4]*100+(int)myblock[5];	//largest available memory block
 		if (num<(size+sizeof(entry))) {	//in case user asks too much
 			int memMinusMeta = num-sizeof(entry)>0 ? num-sizeof(entry) : 0 ;
-			printf("Not enough memory. You have only %d bytes available\n", (int)(memMinusMeta)); 
+			printf("%s: %d: error:Not enough memory. You have only %d bytes available\n", filename,lineNumber,(int)(memMinusMeta)); 
 			return NULL;
 		} else if (size==0) {	//in case if user asks 0 
-			printf("Cannot allocate 0 bytes\n");
+			printf("%s: %d: error:Cannot allocate 0 bytes\n",filename,lineNumber);
 			return NULL;
 		}else {
 			int ind = 6;	//this index for keeping track on what position in array myblock we currently are
@@ -176,7 +176,7 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 							int p = (int)(ind+currEntry->blockSize+2*sizeof(entry));
 							return &(myblock[p]);
 						} else {
-							printf("Could not find enough memory. Returning NULL\n");
+							printf("%s: %d: error:Could not find enough memory. Returning NULL\n",filename,lineNumber);
 							return NULL;
 						}
 					}	
