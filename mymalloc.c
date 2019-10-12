@@ -19,9 +19,7 @@ void myfree(void *ptr,char* filename,int lineNumber){
     entry* head;
     head = (entry*)&myblock[6];
     entry* new = head;
-    while(new->dataPtr != ptr){
-        new = new->next;
-    }
+    while(new->dataPtr != ptr) new = new->next;
     //freeing a pointer that was already freed
     if(new->free == '1'){
         printf("%s: %d: Error: pointer (%p) was freed before.\n",filename,lineNumber, ptr);
@@ -41,29 +39,17 @@ void myfree(void *ptr,char* filename,int lineNumber){
         if(new->next != NULL){
             if(new->next->free == '1'){
                 new->blockSize = new->blockSize + new->next->blockSize+sizeof(entry) ;
-                if(new->next->next != NULL){
-                    new->next =new->next->next;
-                }
-                else{
-                    new->next = NULL;
-                }
+                if(new->next->next != NULL){ new->next =new->next->next; }
+                else{ new->next = NULL; }
          	}
         }
         entry* curr = head;
         if(curr != new){
-            while(curr->next != new){
-             
-                curr = curr->next;
-
-            }
+            while(curr->next != new){ curr = curr->next; }
             if(curr->free =='1'){
                 curr->blockSize = curr->blockSize + new->blockSize+sizeof(entry);
-                if(curr->next->next != NULL){
-                    curr->next =curr->next->next;
-                }
-                else{
-                    curr->next = NULL;
-                }
+                if(curr->next->next != NULL){ curr->next =curr->next->next; }
+                else{ curr->next = NULL;  }
             }
         }        
         // entry* check = head;
@@ -100,7 +86,6 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 			printf("%s: %d: error:\tCannot allocate for 0 bytes\n",filename,lineNumber);
 			return NULL;
 		}
-		printf("line 111\n");
 		num = 4096-size-sizeof(entry)-6;	
 		myblock[4] = (char)(num/100);
 		myblock[5] = (char)(num%100);
@@ -128,7 +113,6 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 			return NULL;
 		}else {
 			int ind = 6;	//this index for keeping track on what position in array myblock we currently are
-			//here we need to start searching for the block of right size
 			currEntry = (entry*)&myblock[6];
 			while (1) {
 				if (currEntry->blockSize>=(size+sizeof(entry)) && currEntry->free=='1') {
@@ -149,7 +133,6 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						myblock[4] = (char)(num/100);
 						myblock[5] = (char)(num%100);
 						printf("returning pointer %p for %d bytes\n",currEntry->dataPtr,currEntry->blockSize);
-						// return newEntry->dataPtr;
 						return currEntry->dataPtr;
 					} else {	//block is not big enough for splitting
 						currEntry->free='0';
@@ -161,7 +144,6 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						printf("returning pointer %p for %d bytes\n",newEntry->dataPtr,newEntry->blockSize);
 						return currEntry->dataPtr;
 					}
-
 				} else {
 					if ( currEntry->next!=NULL ) {	//there are more nodes ahead
 						ind = ind + currEntry->blockSize+sizeof(entry);
@@ -176,9 +158,7 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						anotherEntry->blockSize = s;
 						if (anotherEntry->blockSize>=size) {  //check if need to split
 							anotherEntry->free='0';
-							if (anotherEntry->blockSize>(size+sizeof(entry) +1)) {
-								anotherEntry->blockSize = size;
-							}
+							if (anotherEntry->blockSize>(size+sizeof(entry) +1)) { anotherEntry->blockSize = size; }
 							num = myblock[4]*100+myblock[5];
 							num = num - (anotherEntry->blockSize+sizeof(entry));
 							currEntry->next = anotherEntry;			//because of this linking, currEntry is now linked to anotherEntry
