@@ -1,14 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include "mymalloc.h"
-// struct is compressed for space efficiency, so there is no padding, and it takes only 13 bytes of code
-//'free' variable is of type char - to take as little memory as possible
-typedef struct __attribute__((__packed__)) _entry {		//this struct will hold metadata, about each allocated block
-	char free;
-	int blockSize;
-	struct _entry *next;	
-}entry;
 void *mymalloc(size_t size,char* filename,int lineNumber) {
 	int num;
 	if (!(myblock[0]==(char)35&& myblock[1]==(char)111&&myblock[2]==(char)52&&myblock[3]==(char)241)) {	
@@ -16,8 +5,12 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		myblock[1]=(char)111;
 		myblock[2]=(char)52;
 		myblock[3]=(char)241;	//mymalloc is called first time, so we need to assign value to mybloc[0]
+		printf("The size of entry is %d\n",(int)sizeof(entry));
 		if (size>(4096-sizeof(entry)-6)) {
 			printf("Cannot allocate that amount of space, try asking for less.\n");
+			return NULL;
+		} else if (size==0) {
+			printf("%s: %d: error:\tCannot allocate for 0 bytes\n",filename,lineNumber);
 			return NULL;
 		}
 		num = 4096-size-sizeof(entry)-6;	
@@ -27,11 +20,13 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		first_entry.blockSize= size;
 		first_entry.free = '0';
 		first_entry.next = NULL;
+		first_entry.dataPtr = &myblock[19];
 		*(entry*)(myblock+6) = first_entry;
 		printf("Allocated %d bytes at %d position\n",(int)size,(int)(6+sizeof(entry)));
-		return &myblock[6+sizeof(entry)]; // (or &myblock[5+sizeof(entry)])???? 
-	} else {	//if we got here, than mymalloc was called before. Will search for large enough block of 
-				//free memory (including metadata size, which is sizeof(entry))
+		return first_entry.dataPtr;
+		// return &myblock[6+sizeof(entry)]; // (or &myblock[5+sizeof(entry)])???? 
+	} else {	//if we got here, than mymalloc was called before. Need to search whether we can find the block of 
+				//free memory in myblock of needed size(including metadata size, which is sizeof(entry))
 		entry* anotherEntry;
 		entry* currEntry ;
 		entry* newEntry;
@@ -40,34 +35,41 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 			int memMinusMeta = num-sizeof(entry)>0 ? num-sizeof(entry) : 0 ;
 			printf("Not enough memory. You have only %d bytes available\n", (int)(memMinusMeta)); 
 			return NULL;
-		} else {
+		} else if (size==0) {	//in case if user asks 0 
+			printf("%s: %d: error:\tCannot allocate 0 bytes\n",filename, lineNumber);
+			return NULL;
+		}else {
 			int ind = 6;	//this index for keeping track on what position in array myblock we currently are
 			//here we need to start searching for the block of right size
 			currEntry = (entry*)&myblock[6];
 			while (1) {
-				if (currEntry->blockSize>=(size+sizeof(entry)) && currEntry->free=='1') {	//if found large enough block that was freed before
+				if (currEntry->blockSize>=(size+sizeof(entry)) && currEntry->free=='1') {
 					if (currEntry->blockSize>=(size+sizeof(entry)+1)) {	// if block is big enough to split into 2 blocks
-						
-						newEntry = (entry*)&myblock[ind+sizeof(entry)+size];
-						
-						newEntry->blockSize = (currEntry->blockSize)-size-sizeof(entry);
+						printf("currEntry blocksize is %d\n",currEntry->blockSize);
+						int a = currEntry->blockSize-(int)size-sizeof(entry);
+						printf("a is %d\n",a);
+						newEntry->blockSize = a;
 						newEntry->free='1';
 						newEntry->next = currEntry->next;
+						newEntry->dataPtr = &myblock[ind+sizeof(entry)];
 						currEntry->next = newEntry;
 						currEntry->free = '0';
 						num = myblock[4]*100+myblock[5];
 						num =-(size+sizeof(entry));
 						myblock[4] = (char)(num/100);
 						myblock[5] = (char)(num%100);
-						return &myblock[ind+sizeof(entry)];
+						return newEntry->dataPtr;
 					} else {	//block is not big enough for splitting
 						currEntry->free='0';
 						num = myblock[4]*100+myblock[5];
 						num =-(currEntry->blockSize+sizeof(entry));
 						myblock[4] = (char)(num/100);
 						myblock[5] = (char)(num%100);
-						return &myblock[ind+sizeof(entry)];
+						newEntry->dataPtr = &myblock[ind+sizeof(entry)];
+						printf("returning pointer %p\n",newEntry->dataPtr);
+						return newEntry->dataPtr;
 					}
+
 				} else {
 					if ( currEntry->next!=NULL ) {	//there are more nodes ahead
 						ind = ind + currEntry->blockSize+sizeof(entry);
@@ -76,12 +78,15 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						anotherEntry = (entry*)&myblock[ind+sizeof(entry)+currEntry->blockSize];
 						anotherEntry->next = currEntry->next;
 						anotherEntry->free = '1'; 
+						anotherEntry->next = NULL;
 						int k = (int)currEntry->blockSize;
 						int s = 4096-( ind + 2*(int)sizeof(entry)+k);
 						anotherEntry->blockSize = s;
 						if (anotherEntry->blockSize>=size) {  //check if need to split
 							anotherEntry->free='0';
-							if (anotherEntry->blockSize>(size+sizeof(entry) +1))  { anotherEntry->blockSize = size; }
+							if (anotherEntry->blockSize>(size+sizeof(entry) +1)) {
+								anotherEntry->blockSize = size;
+							}
 							num = myblock[4]*100+myblock[5];
 							num = num - (anotherEntry->blockSize+sizeof(entry));
 							currEntry->next = anotherEntry;			//because of this linking, currEntry is now linked to anotherEntry
@@ -89,40 +94,18 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 							myblock[5] = (char)(num%100);
 							printf("location of %d bytes block is %d.\n",anotherEntry->blockSize,(int)(ind+sizeof(entry)*2+currEntry->blockSize));
 							int p = (int)(ind+currEntry->blockSize+2*sizeof(entry));
-							return &(myblock[p]);
+							anotherEntry->dataPtr = &(myblock[p]);
+							printf("returning pointer %p\n",anotherEntry->dataPtr);
+							return anotherEntry->dataPtr;
 						} else {
 							printf("Could not find enough memory. Returning NULL\n");
 							return NULL;
 						}
-					}	
+					}
 				} 
 			}
-		}	
+		}
+		
 	}
 	return NULL;
 }
-int main(int argc, char* argv[]) {
-	int *a;
-	a = malloc(3060);
-	int x = (int)myblock[4]*100+(int)myblock[5];
-	malloc(30);
-	entry* e = (entry*)&myblock[6];
-	int* aa = (int*)malloc(40);
-	*(aa+1) = 5;
-	*(aa+3)=765;
-	printf("a[1] is %d, aa[3] is %d\n",*(aa+1),*(aa+3));
-	malloc(25);
-	malloc(10);
-	malloc(10);
-	malloc(15);
-	malloc(67);
-	malloc(120);
-	printf("\nAll the allocated blocks are:\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf("size: %d\n",e->blockSize);
-		e=e->next;
-	} while (e!=NULL);
-	return 0;
-}
-

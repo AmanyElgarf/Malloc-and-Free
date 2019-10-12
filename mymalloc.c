@@ -11,7 +11,7 @@ typedef struct __attribute__((__packed__)) _entry {		//this struct will hold met
 }entry;
 
 
-void myfree(void *ptr){
+void myfree(void *ptr,char* filename,int lineNumber){
     
     //freeing a pointer that wasn't allocated by malloc before
     entry* b = (entry*)(((char*)ptr));
@@ -108,10 +108,10 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		myblock[2]=(char)52;
 		myblock[3]=(char)241;	//mymalloc is called first time, so we need to assign value to mybloc[0]
 		if (size>(4096-sizeof(entry)-6)) {
-			printf("%s: %d: error:Cannot allocate that amount of space, try asking for less.\n", filename,lineNumber);
+			printf("Cannot allocate that amount of space, try asking for less.\n");
 			return NULL;
 		} else if (size==0) {
-			printf("%s: %d: error: Cannot allocate for 0 bytes\n",filename,lineNumber);
+			printf(" Cannot allocate for 0 bytes\n");
 			return NULL;
 		}
 		num = 4096-size-sizeof(entry)-6;	//'num' holds total amount of available memory
@@ -132,10 +132,10 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		num = (int)myblock[4]*100+(int)myblock[5];	//largest available memory block
 		if (num<(size+sizeof(entry))) {	//in case user asks too much
 			int memMinusMeta = num-sizeof(entry)>0 ? num-sizeof(entry) : 0 ;
-			printf("%s: %d: error:Not enough memory. You have only %d bytes available\n", filename,lineNumber,(int)(memMinusMeta)); 
+			printf("error:Not enough memory. You have only %d bytes available\n",(int)(memMinusMeta)); 
 			return NULL;
 		} else if (size==0) {	//in case if user asks 0 
-			printf("%s: %d: error:Cannot allocate 0 bytes\n",filename,lineNumber);
+			printf("error:Cannot allocate 0 bytes\n");
 			return NULL;
 		}else {
 			int ind = 6;	//this index for keeping track on what position in array myblock we currently are
@@ -188,7 +188,7 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 							int p = (int)(ind+currEntry->blockSize+2*sizeof(entry));
 							return &(myblock[p]);
 						} else {
-							printf("%s: %d: error:Could not find enough memory. Returning NULL\n",filename,lineNumber);
+							printf("error:Could not find enough memory. Returning NULL\n");
 							return NULL;
 						}
 					}	
@@ -200,29 +200,37 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 }
 int main(int argc, char* argv[]) {
 	int *a;
-	a = malloc(300);
-	// int x = (int)myblock[4]*100+(int)myblock[5];
-	malloc(30);
-	entry* e = (entry*)&myblock[6];
-	int* aa = (int*)malloc(40);
-	*(aa+1) = 5;
-	*(aa+3)=765;
-	printf("a[1] is %d, aa[3] is %d\n",*(aa+1),*(aa+3));
-	malloc(100);
-	malloc(100);
-	malloc(100);
-	malloc(150);
-	malloc(100);
-	malloc(0);
-	printf("\nAll the allocated blocks are:\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf("size: %d\n",e->blockSize);
-		e=e->next;
-	} while (e!=NULL);
-	myfree(a);
-	a = malloc(100);
-	
+	a = malloc(19);
+	free(a);
+	a = malloc(20);
+	// a = malloc(300);
+	// // int x = (int)myblock[4]*100+(int)myblock[5];
+	// malloc(30);
+	// entry* e = (entry*)&myblock[6];
+	// int* aa = (int*)malloc(40);
+	// *(aa+1) = 5;
+	// *(aa+3)=765;
+	// printf("a[1] is %d, aa[3] is %d\n",*(aa+1),*(aa+3));
+	// malloc(100);
+	// malloc(100);
+	// malloc(100);
+	// malloc(150);
+	// malloc(100);
+	// malloc(0);
+	// printf("\nAll the allocated blocks are:\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf("size: %d\n",e->blockSize);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// free(a);
+	// free(a);
+	// a = malloc(100);
+	// malloc(100);
+	// malloc(9);
+	// malloc(900);
+	// malloc(80);
+
 	// myfree(a);
 	// int b = 3;
 	// myfree((int*)b);

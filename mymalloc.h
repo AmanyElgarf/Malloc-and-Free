@@ -12,6 +12,6 @@
 static char myblock[sizeOfArray];
 
 // void *mymalloc(size_t size, char* filename, int lineNumber);
-void *mymalloc(size_t size,char* filename, int lineNumber);
-void myfree(void *ptr);
+// void *mymalloc(size_t size,char* filename, int lineNumber);
+// void myfree(void *ptr);
 #endif
