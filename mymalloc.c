@@ -12,28 +12,27 @@ typedef struct __attribute__((__packed__)) _entry {		//this struct will hold met
 
 
 void myfree(void *ptr){
-	printf("in myfree\n");
     
     //freeing a pointer that wasn't allocated by malloc before
     entry* b = (entry*)(((char*)ptr));
-    printf(" b is %p\n",b);
+    printf("b's blocksize is %d\n-------------\n",b->blockSize);
+
     if ((char*)b < (myblock+6) || (char*)b >= myblock+sizeof(myblock)){
-        printf("%s: %d: error: (%p) is either not a pointer or a pointer that  was not allocated by malloc before.\n",filename,lineNumber, &ptr);
+        printf("Error: (%p) is either not a pointer or a pointer that  was not allocated by malloc before.\n",&ptr);
         return;
     }
     
     //freeing a pointer that was already freed
     if(b->free == '1'){
-        printf("%s: %d: error: pointer (%p) was freed before.\n", filename, lineNumber,ptr);
+        printf("Error: pointer (%p) was freed before.\n",ptr);
         return;
     }
     else{
         if(b->blockSize > 4090){
-            printf("%s: %d: error: You can free a pointer of size more than 4090 because we are using the first six units to store inf\n", filename, lineNumber);
+            printf("Error: You can't free a pointer of size more than 4090 because we are using the first six units to store inf\n");
             return;
         }
         entry* head = (entry*)(((char*)&myblock[6]));
-        printf("%p", head->next);
         
         //add block space to total space
         myblock[4] = (char)((int)myblock[4] + b->blockSize/100);
@@ -50,23 +49,35 @@ void myfree(void *ptr){
                     b->next = NULL;
                 }
          }
-            entry* curr = head;
-            if(curr != b){
-                while(curr->next !=b){
-                    curr = curr->next;
+        }
+        
+        entry* curr = head;
+        // printf("myblock6 is %p\n", &myblock[6]);
+        // printf("head: %p\n", head);
+        // printf("b: %p\n", b);
+        // printf(" head->next: %p\n", head->next);
+        // printf("b's blocksize is %d\n",b->blockSize);
+        // printf("head->next.blockSize is %d\n",head->next->blockSize);
+
+
+
+        if(curr != b){
+            while(curr->next != b){
+                // printf("%s", "hi");
+                // printf("%p\n", curr);
+                curr = curr->next;
+            }
+            if(curr->free =='1'){
+                curr->blockSize = curr->blockSize + b->blockSize;
+                if(curr->next->next != NULL){
+                    curr->next =curr->next->next;
                 }
-                if(curr->free =='1'){
-                    curr->blockSize = curr->blockSize + b->blockSize;
-                    if(curr->next->next != NULL){
-                        curr->next =curr->next->next;
-                    }
-                    else{
-                        curr->next = NULL;
-                    }
+                else{
+                    curr->next = NULL;
                 }
             }
-            
         }
+        
         entry* check = head;
         int count = 0;
         while(check!=NULL){
@@ -82,7 +93,8 @@ void myfree(void *ptr){
             myblock[3]=(char)24;
         }
         printf("Pointer (%p) was freed successfully.\n", ptr);
-    }    
+    }
+    
 }
 
 
@@ -210,6 +222,7 @@ int main(int argc, char* argv[]) {
 	} while (e!=NULL);
 	myfree(a);
 	a = malloc(100);
+	
 	// myfree(a);
 	// int b = 3;
 	// myfree((int*)b);
