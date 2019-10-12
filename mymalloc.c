@@ -212,27 +212,28 @@ int main(int argc, char* argv[]) {
 		printf("size: %d, pointer: %p free: %c\n",e->blockSize, e->dataPtr,e->free);
 		e=e->next;
 	} while (e!=NULL);
+	// free(a+6);
 	free(a);
-	printf("\nafter a was freed: -----\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf("size: %d, pointer: %p free: %c\n",e->blockSize, e->dataPtr,e->free);
-		e=e->next;
-	} while (e!=NULL);
-	free(c);
-	printf("\nafter c was freed: -----\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf("size: %d, pointer: %p free: %c\n",e->blockSize, e->dataPtr,e->free);
-		e=e->next;
-	} while (e!=NULL);
-	free(b);
-	printf("\nafter b was freed: -----\n");
-	e = (entry*)&myblock[6];
-	do {
-		printf("size: %d, pointer: %p free: %c\n",e->blockSize, e->dataPtr,e->free);
-		e=e->next;
-	} while (e!=NULL);
+	// printf("\nafter a was freed: -----\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf("size: %d, pointer: %p free: %c\n",e->blockSize, e->dataPtr,e->free);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// free(c);
+	// printf("\nafter c was freed: -----\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf("size: %d, pointer: %p free: %c\n",e->blockSize, e->dataPtr,e->free);
+	// 	e=e->next;
+	// } while (e!=NULL);
+	// free(b);
+	// printf("\nafter b was freed: -----\n");
+	// e = (entry*)&myblock[6];
+	// do {
+	// 	printf("size: %d, pointer: %p free: %c\n",e->blockSize, e->dataPtr,e->free);
+	// 	e=e->next;
+	// } while (e!=NULL);
 	// int *d = malloc(1200);
 	// printf("\nafter d was allocated: -----\n");
 	// e = (entry*)&myblock[6];
