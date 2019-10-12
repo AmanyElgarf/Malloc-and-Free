@@ -194,6 +194,8 @@ int main(int argc, char* argv[]) {
 	} while (e!=NULL);
 	// free(a+6);
 	free(a);
+	int *aa = malloc(150);
+	free(aa+5);
 	// printf("\nafter a was freed: -----\n");
 	// e = (entry*)&myblock[6];
 	// do {
