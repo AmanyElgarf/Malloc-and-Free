@@ -16,10 +16,17 @@ void myfree(void *ptr,char* filename,int lineNumber){
         printf("%s: %d: Error: (%p) is either not a pointer or a pointer that  was not allocated by malloc before.\n", filename,lineNumber,ptr);
         return;
     }
-    entry* head;
+     entry* head;
     head = (entry*)&myblock[6];
     entry* new = head;
-    while(new->dataPtr != ptr) new = new->next;
+    while(new->dataPtr != ptr && new->next != NULL){
+        new = new->next;
+    }
+   
+    if(new->next == NULL && new->dataPtr != ptr){
+        printf("Error: (%p) is either not a pointer or a pointer that  was not allocated by malloc before.\n", ptr);
+        return;
+    }
     //freeing a pointer that was already freed
     if(new->free == '1'){
         printf("%s: %d: Error: pointer (%p) was freed before.\n",filename,lineNumber, ptr);
