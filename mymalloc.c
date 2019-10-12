@@ -11,7 +11,6 @@ typedef struct __attribute__((__packed__)) _entry {		//this struct will hold met
 }entry;
 
 
-
 void myfree(void *ptr){
     
     //freeing a pointer that wasn't allocated by malloc before
@@ -33,13 +32,7 @@ void myfree(void *ptr){
         }
         entry* head = (entry*)(((char*)&myblock[6]));
         printf("%p", head->next);
-        if(head->next == NULL){
-            printf("hi\n");
-            myblock[0]=(char)345;
-            myblock[1]=(char)1441;
-            myblock[2]=(char)524;
-            myblock[3]=(char)24;
-        }
+        
         //add block space to total space
         myblock[4] = (char)((int)myblock[4] + b->blockSize/100);
         myblock[5] = (char)((int)myblock[5] + b->blockSize%100);
@@ -72,10 +65,26 @@ void myfree(void *ptr){
             }
             
         }
+        entry* check = head;
+        int count = 0;
+        while(check!=NULL){
+            if(check->free == '0'){
+                count++;
+            }
+            check=check->next;
+        }
+        if(count == 0){
+            myblock[0]=(char)345;
+            myblock[1]=(char)1441;
+            myblock[2]=(char)524;
+            myblock[3]=(char)24;
+        }
         printf("Pointer (%p) was freed successfully.\n", ptr);
     }
     
 }
+
+
 
 void *mymalloc(size_t size,char* filename,int lineNumber) {
 	int num;
