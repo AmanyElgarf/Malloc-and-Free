@@ -12,9 +12,11 @@ typedef struct __attribute__((__packed__)) _entry {		//this struct will hold met
 
 
 void myfree(void *ptr){
+	printf("in myfree\n");
     
     //freeing a pointer that wasn't allocated by malloc before
     entry* b = (entry*)(((char*)ptr));
+    printf(" b is %p\n",b);
     if ((char*)b < (myblock+6) || (char*)b >= myblock+sizeof(myblock)){
         printf("Error: (%p) is either not a pointer or a pointer that  was not allocated by malloc before.\n", &ptr);
         return;
@@ -31,7 +33,7 @@ void myfree(void *ptr){
             return;
         }
         entry* head = (entry*)(((char*)&myblock[6]));
-        printf("%p", head->next);
+        printf("line 35: %p", head->next);
         
         //add block space to total space
         myblock[4] = (char)((int)myblock[4] + b->blockSize/100);
@@ -80,13 +82,13 @@ void myfree(void *ptr){
             myblock[3]=(char)24;
         }
         printf("Pointer (%p) was freed successfully.\n", ptr);
-    }
-    
+    }    
 }
 
 
 
 void *mymalloc(size_t size,char* filename,int lineNumber) {
+	printf("allocating %d bytes\n",(int)size);
 	int num;
 	if (!(myblock[0]==(char)35&& myblock[1]==(char)111&&myblock[2]==(char)52&&myblock[3]==(char)241)) {	
 		myblock[0]=(char)35;
@@ -128,11 +130,11 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 			//here we need to start searching for the block of right size
 			currEntry = (entry*)&myblock[6];	//create currEntry for traversing through the metadata
 			while (1) {
+				printf("curr entry's size is %d, free value is %c\n",currEntry->blockSize,currEntry->free);
 				if (currEntry->blockSize>=(size+sizeof(entry)) && currEntry->free=='1') {	//if found large enough block that was freed before
+					printf("line 136\n");
 					if (currEntry->blockSize>=(size+sizeof(entry)+1)) {	// check if block is big enough to split into 2 blocks
-						
-						newEntry = (entry*)&myblock[ind+sizeof(entry)+size];
-						
+						newEntry = (entry*)&myblock[ind+sizeof(entry)+size];					
 						newEntry->blockSize = (currEntry->blockSize)-size-sizeof(entry);
 						newEntry->free='1';
 						newEntry->next = currEntry->next;
@@ -186,20 +188,19 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 }
 int main(int argc, char* argv[]) {
 	int *a;
-	a = malloc(3060);
-	int x = (int)myblock[4]*100+(int)myblock[5];
+	a = malloc(300);
+	// int x = (int)myblock[4]*100+(int)myblock[5];
 	malloc(30);
 	entry* e = (entry*)&myblock[6];
 	int* aa = (int*)malloc(40);
 	*(aa+1) = 5;
 	*(aa+3)=765;
 	printf("a[1] is %d, aa[3] is %d\n",*(aa+1),*(aa+3));
-	malloc(25);
-	malloc(10);
-	malloc(10);
-	malloc(15);
-	malloc(67);
-	malloc(120);
+	malloc(100);
+	malloc(100);
+	malloc(100);
+	malloc(150);
+	malloc(100);
 	malloc(0);
 	printf("\nAll the allocated blocks are:\n");
 	e = (entry*)&myblock[6];
@@ -207,5 +208,10 @@ int main(int argc, char* argv[]) {
 		printf("size: %d\n",e->blockSize);
 		e=e->next;
 	} while (e!=NULL);
+	myfree(a);
+	a = malloc(100);
+	// myfree(a);
+	// int b = 3;
+	// myfree((int*)b);
 	return 0;
 }
