@@ -1,3 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include "mymalloc.h"
+// struct is compressed for space efficiency, so there is no padding, and it takes only 13 bytes of code
+//'free' variable is of type char - to take as little memory as possible
+typedef struct __attribute__((__packed__)) _entry {        //this struct will hold metadata, about each allocated block
+    char free;
+    int blockSize;
+    void* dataPtr;
+    struct _entry *next;
+}entry;
+
+
+void myfree(void *ptr){
+    
+    //freeing a pointer that wasn't allocated by malloc before
+    if ((char*)ptr < (myblock+6) || (char*)ptr >= myblock+sizeof(myblock)){
+        printf("Error: (%p) is either not a pointer or a pointer that  was not allocated by malloc before.\n", ptr);
+        return;
+    }
+    
+    entry* head;
+    head = (entry*)&myblock[6];
+    entry* new = head;
+    while(new->dataPtr != ptr){
+        new = new->next;
+    }
+   
+    //freeing a pointer that was already freed
+    if(new->free == '1'){
+        printf("Error: pointer (%p) was freed before.\n", ptr);
+        return;
+    }
+    
+    
+    else{
+        if(new->blockSize > 4090){
+            printf("Error: You can't free a pointer of size more than 4090 because we are using the first six units to store inf\n");
+            return;
+        }
+        
+        //add block space to total space
+        myblock[4] = (char)((int)myblock[4] + head->blockSize/100);
+        myblock[5] = (char)((int)myblock[5] + head->blockSize%100);
+        new->free = '1';
+        //checck for next block
+        if(new->next != NULL){
+            if(new->next->free == '1'){
+                new->blockSize = new->blockSize + new->next->blockSize;
+                if(new->next->next != NULL){
+                    new->next =new->next->next;
+                }
+                else{
+                    new->next = NULL;
+                }
+         }
+        }
+        
+        entry* curr = head;
+
+        if(curr != new){
+            while(curr->next != new){
+             
+                curr = curr->next;
+
+            }
+            if(curr->free =='1'){
+                curr->blockSize = curr->blockSize + new->blockSize;
+                if(curr->next->next != NULL){
+                    curr->next =curr->next->next;
+                }
+                else{
+                    curr->next = NULL;
+                }
+            }
+        }
+        
+        entry* check = head;
+        int count = 0;
+        while(check!=NULL){
+            if(check->free == '0'){
+                count++;
+            }
+            check=check->next;
+        }
+        if(count == 0){
+            myblock[0]=(char)345;
+            myblock[1]=(char)1441;
+            myblock[2]=(char)524;
+            myblock[3]=(char)24;
+        }
+        printf("Pointer (%p) was freed successfully.\n", ptr);
+    }
+    
+}
+
 void *mymalloc(size_t size,char* filename,int lineNumber) {
 	int num;
 	printf("mallocing %d bytes\n",(int)size);
