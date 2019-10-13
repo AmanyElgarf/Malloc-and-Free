@@ -64,6 +64,7 @@ void myfree(void *ptr,char* filename,int lineNumber){
 }
 void *mymalloc(size_t size,char* filename,int lineNumber) {
 	printf("mallocing %d bytes\n",(int)size);
+	int k,s;
 	if (!(myblock[0]==(char)35&& myblock[1]==(char)111&&myblock[2]==(char)52&&myblock[3]==(char)241)) {	
 		myblock[0]=(char)35;
 		myblock[1]=(char)111;
@@ -134,8 +135,8 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						anotherEntry->next = currEntry->next;
 						anotherEntry->free = '1'; 
 						anotherEntry->next = NULL;
-						int k = (int)currEntry->blockSize;
-						int s = 4096-( ind + 2*(int)sizeof(entry)+k);
+						k = (int)currEntry->blockSize;
+						s = 4096-( ind + 2*(int)sizeof(entry)+k);
 						anotherEntry->blockSize = s;
 						if (anotherEntry->blockSize>=size) {  //check if need to split
 							anotherEntry->free='0';
@@ -159,6 +160,9 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 }
 
 int main(int argc, char* argv[]) {
+
+	// ---------TESTCASE 1 :: freeing and allocating many times, checking if freed blocks are being stitched,
+	//  if malloc reuses freed blocks etc:
 	// int *a = malloc(1000);
 	// *(a+1) = 5;
 	// *(a+3)=765;
@@ -262,11 +266,25 @@ int main(int argc, char* argv[]) {
 	// 	e=e->next;
 	// } while (e!=NULL);
 	// printf("\n");
-	int *a = malloc(500);
-	int *b = malloc(1000);
-	int *c = malloc(1500);
-	int *d = malloc(1000);
-	int *e = malloc(10);
+
+
+
+
+	// --------TESTCASE2 :: testing for not allocating when there is no more memory
+	// int *b = malloc(1000);
+	// int *c = malloc(2000);
+	// int *d = malloc(1000);
+	// int *e = malloc(5);
+	// int *a = malloc(1);
+
+
+
+
+	//-----------TESTCASE3 :: testing for allocating more bytes if there are less than 1+sizeof(entry) left at the end
+	int *a = malloc(4040);
+	int *b = malloc(1);
+
+
 	return 0;
 }
 
