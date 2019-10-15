@@ -59,8 +59,6 @@ void myfree(void *ptr,char* filename,int lineNumber){
                 else{ curr->next = NULL;  }
             }
         }        
-        // printf("freeing %d bytes\n",freedBytes);
-        // printf("Success: Pointer (%p) was freed successfully.\n", ptr);
     }    
 }
 void *mymalloc(size_t size,char* filename,int lineNumber) {
@@ -70,7 +68,6 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		myblock[1]=(char)111;
 		myblock[2]=(char)52;
 		myblock[3]=(char)241;	//mymalloc is called first time, so we need to assign value to mybloc[0]
-		// printf("The size of entry is %d\n",(int)sizeof(entry));
 		if (size>(4096-sizeof(entry)-6)) {
 			printf("%s: %d: Cannot allocate that amount of space, try asking for less.\n",filename,lineNumber);
 			return NULL;
@@ -83,9 +80,7 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		first_entry.free = '0';
 		first_entry.next = NULL;
 		first_entry.dataPtr = &myblock[6+sizeof(entry)];
-		// printf(">>>>>>>>>>>>>>>The pointer to %d bytes is at %d position\n",(int)size, (int)(6+sizeof(entry)));
 		*(entry*)(myblock+6) = first_entry;
-		// printf("Allocated %d bytes at %d position. Returning pointer %p\n",(int)size,(int)(6+sizeof(entry)), first_entry.dataPtr);
 		return first_entry.dataPtr;
 	} else {	//if we got here, than mymalloc was called before. Need to search whether we can find the block of 
 		entry* anotherEntry;
@@ -98,7 +93,6 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 			int ind = 6;	//this index for keeping track on what position in array myblock we currently are
 			currEntry = (entry*)&myblock[6];
 			while (1) {
-				// printf("currEntry's size is %d, free is %c\n",(int)currEntry->blockSize,currEntry->free);
 				if (currEntry->blockSize>=(size) && currEntry->free=='1') {
 					if (currEntry->blockSize>=(size+sizeof(entry)+1)) {	// if block is big enough to split into 2 blocks
 						int a = currEntry->blockSize-(int)size-sizeof(entry);
@@ -110,16 +104,10 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						currEntry->blockSize = size;
 						currEntry->next = newEntry;
 						currEntry->free = '0';
-						// printf("location of block after %d bytes block is %d.\n",currEntry->blockSize,(int)(ind+sizeof(entry)*2+size));
-						// printf(">>>>>>>>>>>>>>>The pointer to %d bytes is at %d position\n",(int)size, (int)(ind+sizeof(entry)));
-						// printf("returning pointer %p for %d bytes\n",currEntry->dataPtr,currEntry->blockSize);
 						return currEntry->dataPtr;
 					} else {	//block is not big enough for splitting
 						currEntry->free='0';
 						currEntry->dataPtr = &myblock[ind+sizeof(entry)];
-						// printf("returning pointer %p for %d bytes\n",currEntry->dataPtr,currEntry->blockSize);
-						// printf(">>>>>>>>>>>>>>>The pointer to %d bytes is at %d position\n",(int)size, (int)(ind+sizeof(entry)));
-						// printf("location of %d bytes block is %d.\n",currEntry->blockSize,(int)(ind+sizeof(entry)));
 						return currEntry->dataPtr;
 					}
 				} else {
@@ -127,9 +115,7 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						ind = ind + currEntry->blockSize+sizeof(entry);
 						currEntry = currEntry->next;	
 					} else {
-						// printf("entry's size: %d,sizeof entry : %d\n",currEntry->blockSize,(int)sizeof(entry));
 						int endOfList = (int)(ind+currEntry->blockSize+sizeof(entry));
-						// printf("at the end of the list. Ind is  %d, end of list is: %d\n", ind,(int)endOfList);	//reached the end of the list. Check if have enough memory at the end
 						if ((int)(endOfList+size + sizeof(entry))>4096) {
 							printf("%s: %d: Error: Not enough space left . Returning NULL\n", filename,lineNumber);
 							return NULL;
