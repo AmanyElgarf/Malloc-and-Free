@@ -4,7 +4,7 @@ TEST CASES E and F:
 Test Case E:
 ----------
 
-In this workload, we first call malloc 409 times creating 409 pointer of size 10 each until the heap becomes full.
+In this test case, we first call malloc 409 times creating 409 pointer of size 10 each until the heap becomes full.
 As we do this, the resulting pointers are stored inside an array called pointers[409].
 
 We then free every other pointer, starting with the first one in the heap.
@@ -28,7 +28,7 @@ At the end, we free every pointer in the array.
 Test Case F:
 ----------
 
-This workload is similar to Workload E, but with a very big difference.
+This test case is similar to test case E, but with a very big difference.
 
 We still begin by mallocing the heap to capacity and then freeing every other pointer/block.
 
