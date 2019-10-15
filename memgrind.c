@@ -86,14 +86,19 @@ double testcaseC(){
     clock_t start, end;
     char* pointers[50];
     double time_total = 0;
+    
+    // take the average of 100 trials
     for(x=0; x<100; x++){
         y=0;
+        
+        //start the timer
         start = clock();
+        
         while(y < 50){
-            r = rand() % 2;
+            r = rand() % 2; //randomly choose between malloc and free
             if(r==0){
                 pointers[y] = (char*)malloc(1);
-                if(pointers[y] == NULL){
+                if(pointers[y] == NULL){ //Null pointer check
                     return -1;
                 }
                 y++;
@@ -109,11 +114,16 @@ double testcaseC(){
         for(h=0; h<50; h++){
             free(pointers[h]);
         }
+        
+        //end the timer
         end = clock();
+        
+         // calculate the duration of a single malloc/free call and add to total
         time_total += (double)(end - start)/CLOCKS_PER_SEC;
 
     }
     
+    // return the average time elapsed
     return time_total/100;
 }
 
@@ -160,19 +170,14 @@ double testcaseD(){
         // calculate the duration of a single malloc/free call and add to total
         time_total += (double)(end - start)/CLOCKS_PER_SEC;
     }
-    
-    printf("%lf\n", time_total/100);
-    
+        
     // return the average time elapsed
     return time_total/100;
     
 }
 
 
-
 int main(int argc, char* argv[]) {
-
-    
     printf("Testcase A took on average %.2f microseconds to complete.\n", testcaseA()*1000000);
     printf("Testcase B took on average %.2f microseconds to complete.\n", testcaseB()*1000000);
     printf("Testcase C took on average %.2f microseconds to complete.\n", testcaseC()*1000000);
