@@ -31,7 +31,6 @@ double testcaseA() {
         time_total += (double)(end - start)/CLOCKS_PER_SEC;       
     }    
     // return the average time elapsed
-    printf("%lf", time_total/100);
     return time_total/100;
     
 }
@@ -77,7 +76,6 @@ double testcaseB() {
         time_total += (double)(end - start)/CLOCKS_PER_SEC;
     }
     
-    printf("%lf", time_total/100);
     return time_total/100;
 }
 
@@ -116,9 +114,7 @@ double testcaseC(){
 
     }
     
-    printf("%lf\n", time_total/100);
     return time_total/100;
-    
 }
 
 
@@ -173,10 +169,17 @@ double testcaseD(){
 }
 
 
+
 int main(int argc, char* argv[]) {
-	testcaseA();
-	testcaseB();
-	return 0;
+
+    
+    printf("Testcase A took on average %.2f microseconds to complete.\n", testcaseA()*1000000);
+    printf("Testcase B took on average %.2f microseconds to complete.\n", testcaseB()*1000000);
+    printf("Testcase C took on average %.2f microseconds to complete.\n", testcaseC()*1000000);
+    printf("Testcase D took on average %.2f microseconds to complete.\n", testcaseD()*1000000);
+    printf("Testcase E took on average %.2f microseconds to complete.\n", testcaseE()*1000000);
+    printf("Testcase F took on average %.2f microseconds to complete.\n", testcaseF()*1000000);
+    return 0;
 }
 
 
