@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-# <<<<<<< HEAD
 CC = gcc 
 CFLAGS = -g -Wall 
-=======
-CC = g++
-CCFLAGS = -Wall
->>>>>>> c109d14459dbc917c1d031e5a59a03e4a5751468
 
 all: memgrind
 
