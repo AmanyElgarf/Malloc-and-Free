@@ -1,0 +1,45 @@
+TEST CASES E and F:
+
+
+Test Case E:
+----------
+
+In this test case, we first call malloc until the heap becomes full.
+As we do this, the resulting pointers are stored inside an array called pointers.
+
+We then free every other pointer, starting with the first one in the heap.
+
+
+Now, for each pointer which is freed (pointers[0], pointers[2], etc.), we call
+malloc with a pre-calculated size such that:
+
+- It is small enough that the chunk will fit in a freed block.
+- It is big enough so that NO splitting will occur in the freed blocks.
+
+Doing this causes each even entry of the pointers array to point to a newly-malloced
+Space. In particular, the heap should now look the SAME as the way it did before calling free
+on every other chunk. This is because no splitting of blocks has occurred, so there are
+the same amount of chunks, and no chunk has changed in size. All chunks are now active,
+like they were before the freeing took place.
+
+At the end, we free every pointer in the array.
+
+
+Test Case F:
+----------
+
+This test case is similar to test case E, but with a very big difference.
+
+We still begin by mallocing the heap to capacity and then freeing every other pointer/block.
+
+However, now, for each pointer that is freed (pointers[0], pointers[2], etc.) we call malloc with a
+pre-calculated size such that:
+
+- It is small enough that the chunk will fit in a freed chunk.
+- It is small enough that splitting will occur in the freed blocks, but also big enough that the new chunk will not be able to hold the next-malloced chunk (the new chunk will be too small to hold it) 
+
+
+This process is continued for each free chunk. At this point, there should be more chunks in the heap
+than there were before we freed, since splitting occurred.
+
+At the end, we free every pointer in the array.

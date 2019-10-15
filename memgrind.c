@@ -176,15 +176,23 @@ double testcaseD(){
 double testcaseE(){
     int x, y, w, k, z;
     clock_t start, end;
+<<<<<<< HEAD
     char* pointers[69];
     double time_total = 0;
     
     for(x=0; x<100; x++){
         y=0;
+=======
+    char* pointers[49];
+    double time_total = 0;
+    
+    for(x=0; x<100; x++){
+>>>>>>> a676ee8e6b5f24b01a348a7a9f9ae0cfc92811b0
         
         //start the timer
         start = clock();
         
+<<<<<<< HEAD
         pointers[0] = (char*)malloc(60);
         while(pointers[y] != NULL){
             y++;
@@ -203,12 +211,76 @@ double testcaseE(){
         for(z=0; z<y; z++){
             free(pointers[z]);
         }
+=======
+        for(y=0; y<49; y++){
+            pointers[y] = (char*)malloc(60);
+        }
+        
+        //freeing each other pointer
+        for(w=0; w<49; w=w+2){
+            free(pointers[w]);
+        }
+        
+        //mallocing the freed pointer with space thats different from the original one
+        for(k=0; k<49; k=k+2){
+            pointers[k] = (char*)malloc(50);
+        }
+        
+        //freeinng all pointers
+        for(z=0; z<49; z++){
+            free(pointers[z]);
+        }
+        
         //end the timer
         end = clock();
         
         // calculate the duration of a single malloc/free call and add to total
         time_total += (double)(end - start)/CLOCKS_PER_SEC;
     }
+    
+    // return the average time elapsed
+    return time_total/100;
+}
+
+
+double testcaseE(){
+    int x, y, w, k, z;
+    clock_t start, end;
+    char* pointers[49];
+    double time_total = 0;
+    
+    for(x=0; x<100; x++){
+        
+        //start the timer
+        start = clock();
+        
+        for(y=0; y<49; y++){
+            pointers[y] = (char*)malloc(60);
+        }
+        
+        //freeing each other pointer
+        for(w=0; w<49; w=w+2){
+            free(pointers[w]);
+        }
+        
+        //mallocing the freed pointer with space thats different from the original one
+        for(k=0; k<49; k=k+2){
+            pointers[k] = (char*)malloc(30);
+        }
+        
+        //freeinng all pointers
+        for(z=0; z<49; z++){
+            free(pointers[z]);
+        }
+        
+>>>>>>> a676ee8e6b5f24b01a348a7a9f9ae0cfc92811b0
+        //end the timer
+        end = clock();
+        
+        // calculate the duration of a single malloc/free call and add to total
+        time_total += (double)(end - start)/CLOCKS_PER_SEC;
+    }
+<<<<<<< HEAD
     // return the average time elapsed
     return time_total/100;
 }
@@ -394,3 +466,21 @@ int main(int argc, char* argv[]) {
 
 
 
+=======
+    
+    // return the average time elapsed
+    return time_total/100;
+}
+
+
+
+int main(int argc, char* argv[]) {
+    printf("Testcase A took on average %.2f microseconds to complete.\n", testcaseA()*1000000);
+    printf("Testcase B took on average %.2f microseconds to complete.\n", testcaseB()*1000000);
+    printf("Testcase C took on average %.2f microseconds to complete.\n", testcaseC()*1000000);
+    printf("Testcase D took on average %.2f microseconds to complete.\n", testcaseD()*1000000);
+    printf("Testcase E took on average %.2f microseconds to complete.\n", testcaseE()*1000000);
+    printf("Testcase F took on average %.2f microseconds to complete.\n", testcaseF()*1000000);
+    return 0;
+}
+>>>>>>> a676ee8e6b5f24b01a348a7a9f9ae0cfc92811b0
