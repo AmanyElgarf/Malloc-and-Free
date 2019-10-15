@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-// #include "mymalloc.c"
 #include "mymalloc.h"
 
 double testcaseA() {
@@ -215,7 +214,10 @@ double testcaseE(){
 }
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c109d14459dbc917c1d031e5a59a03e4a5751468
 double testcaseF(){
     int x, y, w, k, z;
     clock_t start, end;
