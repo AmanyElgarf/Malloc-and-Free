@@ -119,6 +119,71 @@ double testcaseC(){
     // return the average time elapsed
     return time_total/100;
     
+<<<<<<< HEAD
+=======
+}
+
+
+double testcaseD(){
+    int x, r, y, h, capacity, l;
+    clock_t start, end;
+    char* pointers[50];
+    double time_total = 0;
+    
+    // take the average of 100 trials
+    for(x=0; x<100; x++){
+        y=0;
+        l=0;
+        
+        //start the timer
+        start = clock();
+        while(1){
+            
+            r = rand() % 2; //randomly choose between malloc and free
+            
+            if(r==0){
+                capacity = rand() % 63 + 1; //choose random number between 1 and 64
+                pointers[y] = (char*)malloc(capacity);
+                if(pointers[y] == NULL){  //Null check
+                    return -1;
+                }
+                y++;
+                l++;
+                if(l == 50){break;}
+
+            }
+            else{
+                if(y != 0){
+                    free(pointers[y-1]);
+                    y--;
+                }
+            }
+        }
+        for(h=0; h<y; h++){
+            free(pointers[h]);
+        }
+        
+        //end the timer
+        end = clock();
+        
+        // calculate the duration of a single malloc/free call and add to total
+        time_total += (double)(end - start)/CLOCKS_PER_SEC;
+    }
+    
+    // return the average time elapsed
+    return time_total/100;
+    
+}
+
+int main(int argc, char* argv[]) {
+    printf("Testcase A took on average %.2f microseconds to complete.\n", testcaseA()*1000000);
+    printf("Testcase B took on average %.2f microseconds to complete.\n", testcaseB()*1000000);
+    printf("Testcase C took on average %.2f microseconds to complete.\n", testcaseC()*1000000);
+    printf("Testcase D took on average %.2f microseconds to complete.\n", testcaseD()*1000000);
+    printf("Testcase E took on average %.2f microseconds to complete.\n", testcaseE()*1000000);
+    printf("Testcase F took on average %.2f microseconds to complete.\n", testcaseF()*1000000);
+    return 0;
+>>>>>>> b08415d7e9cea8387dc0092d9f23fef4f901c008
 }
 
 
