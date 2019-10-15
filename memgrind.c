@@ -257,12 +257,12 @@ double testCaseF(){
 
 
 int main(int argc, char* argv[]) {
-    printf("Testcase A took on average %.2f microseconds to complete.\n", testcaseA()*1000000);
-    printf("Testcase B took on average %.2f microseconds to complete.\n", testcaseB()*1000000);
-    printf("Testcase C took on average %.2f microseconds to complete.\n", testcaseC()*1000000);
-    printf("Testcase D took on average %.2f microseconds to complete.\n", testcaseD()*1000000);
-    printf("Testcase E took on average %.2f microseconds to complete.\n", testcaseE()*1000000);
-    printf("Testcase F took on average %.2f microseconds to complete.\n", testcaseF()*1000000);
+    printf("Testcase A took on average %.2f microseconds to complete.\n", testCaseA()*1000000);
+    printf("Testcase B took on average %.2f microseconds to complete.\n", testCaseB()*1000000);
+    printf("Testcase C took on average %.2f microseconds to complete.\n", testCaseC()*1000000);
+    printf("Testcase D took on average %.2f microseconds to complete.\n", testCaseD()*1000000);
+    printf("Testcase E took on average %.2f microseconds to complete.\n", testCaseE()*1000000);
+    printf("Testcase F took on average %.2f microseconds to complete.\n", testCaseF()*1000000);
     return 0;
 }
 
