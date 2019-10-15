@@ -10,7 +10,7 @@
 #define SizeOfEntry sizeof(entry)
 #define sizeOfArray 4096
 static char myblock[sizeOfArray];
-typedef struct __attribute__((__packed__)) _entry {		//this struct will hold metadata, about each allocated block
+typedef struct __attribute__((__packed__)) _entry {		
 	char free;
 	int blockSize;
 	struct _entry *next;

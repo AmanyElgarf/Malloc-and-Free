@@ -3,14 +3,6 @@
 #include <unistd.h>
 #include "mymalloc.h"
 #include <time.h>
-// struct is compressed for space efficiency, so there is no padding, and it takes only 13 bytes of code
-//'free' variable is of type char - to take as little memory as possible
-// typedef struct __attribute__((__packed__)) _entry {		//this struct will hold metadata, about each allocated block
-// 	char free;
-// 	int blockSize;
-// 	struct _entry *next;
-// 	void* dataPtr;	
-// }entry;
 void myfree(void *ptr,char* filename,int lineNumber){
     //freeing a pointer that wasn't allocated by malloc before
     int freedBytes = 0;
@@ -61,9 +53,15 @@ void myfree(void *ptr,char* filename,int lineNumber){
         }        
     }    
 }
+int isInitialized() {
+	int result = 0;
+	if (myblock[0]==(char)35&& myblock[1]==(char)111&&myblock[2]==(char)52&&myblock[3]==(char)241) result = 1;
+	return result;
+}
 void *mymalloc(size_t size,char* filename,int lineNumber) {
 	int k,s;
-	if (!(myblock[0]==(char)35&& myblock[1]==(char)111&&myblock[2]==(char)52&&myblock[3]==(char)241)) {	
+	if (isInitialized()==0) {
+	// if (!(myblock[0]==(char)35&& myblock[1]==(char)111&&myblock[2]==(char)52&&myblock[3]==(char)241)) {	
 		myblock[0]=(char)35;
 		myblock[1]=(char)111;
 		myblock[2]=(char)52;
@@ -133,10 +131,8 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 								anotherEntry->blockSize = size; 
 							}
 							currEntry->next = anotherEntry;			//because of this linking, currEntry is now linked to anotherEntry
-							// printf(">>>>>>>>>>>>>>>The pointer to %d bytes is at %d position\n",anotherEntry->blockSize,(int)(ind+sizeof(entry)*2+currEntry->blockSize));
 							int p = (int)(ind+currEntry->blockSize+2*sizeof(entry));
 							anotherEntry->dataPtr = &(myblock[p]);
-							// printf("returning pointer %p\n",anotherEntry->dataPtr);
 							return anotherEntry->dataPtr;
 						} else {
 							printf("%s: %d: Error: Could not find enough memory. Returning NULL\n", filename,lineNumber);
