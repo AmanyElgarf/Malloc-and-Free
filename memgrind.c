@@ -180,7 +180,7 @@ double testcaseD(){
 double testcaseE(){
     int x, y, w, k, z;
     clock_t start, end;
-    char* pointers[409];
+    char* pointers[69];
     double time_total = 0;
     
     for(x=0; x<100; x++){
@@ -189,9 +189,9 @@ double testcaseE(){
         //start the timer
         start = clock();
         
-        pointers[0] = (char*)malloc(10);
+        pointers[0] = (char*)malloc(60);
         while(pointers[y] != NULL){
-            pointers[y] = (char*)malloc(10);
+            pointers[y] = (char*)malloc(60);
             y++;
         }
         
@@ -202,7 +202,7 @@ double testcaseE(){
         
         //mallocing the freed pointer with space thats different from the original one
         for(k=0; k<y; k=k+2){
-            pointers[k] = (char*)malloc(9);
+            pointers[k] = (char*)malloc(50);
         }
         
         //freeinng all pointers
@@ -225,7 +225,7 @@ double testcaseE(){
 double testcaseF(){
     int x, y, w, k, z;
     clock_t start, end;
-    char* pointers[409];
+    char* pointers[69];
     double time_total = 0;
     
     for(x=0; x<100; x++){
@@ -234,9 +234,9 @@ double testcaseF(){
         //start the timer
         start = clock();
         
-        pointers[0] = (char*)malloc(10);
+        pointers[0] = (char*)malloc(60);
         while(pointers[y] != NULL){
-            pointers[y] = (char*)malloc(10);
+            pointers[y] = (char*)malloc(60);
             y++;
         }
         
@@ -247,7 +247,7 @@ double testcaseF(){
         
         //mallocing the freed pointer with space thats different from the original one
         for(k=0; k<y; k=k+2){
-            pointers[k] = (char*)malloc(5);
+            pointers[k] = (char*)malloc(30);
         }
         
         //freeinng all pointers
@@ -266,50 +266,6 @@ double testcaseF(){
     return time_total/100;
 }
 
-
-double testcaseE(){
-    int x, y, w, k, z;
-    clock_t start, end;
-    char* pointers[409];
-    double time_total = 0;
-    
-    for(x=0; x<100; x++){
-        y=1;
-        
-        //start the timer
-        start = clock();
-        
-        pointers[0] = (char*)malloc(10);
-        while(pointers[y] != NULL){
-            pointers[y] = (char*)malloc(10);
-            y++;
-        }
-        
-        //freeing each other pointer
-        for(w=0; w<y; w=w+2){
-            free(pointers[w]);
-        }
-        
-        //mallocing the freed pointer with space thats different from the original one
-        for(k=0; k<y; k=k+2){
-            pointers[k] = (char*)malloc(9);
-        }
-        
-        //freeinng all pointers
-        for(z=0; z<y; z++){
-            free(pointers[z]);
-        }
-        
-        //end the timer
-        end = clock();
-        
-        // calculate the duration of a single malloc/free call and add to total
-        time_total += (double)(end - start)/CLOCKS_PER_SEC;
-    }
-    
-    // return the average time elapsed
-    return time_total/100;
-}
 
 int main(int argc, char* argv[]) {
     printf("Testcase A took on average %.2f microseconds to complete.\n", testcaseA()*1000000);
@@ -320,8 +276,3 @@ int main(int argc, char* argv[]) {
     printf("Testcase F took on average %.2f microseconds to complete.\n", testcaseF()*1000000);
     return 0;
 }
-
-
-
-
-
