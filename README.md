@@ -17,10 +17,10 @@ The metadata is storing information about allocated space in the struct entry, t
 
  By looking at the reaults of first 4 testcases, we can conclude the following: 
 
- - Allocating and immidiately freeing one byte of memory many times takes relatively short amount of time. 
+ CASE A: Allocating and immidiately freeing one byte of memory many times takes relatively short amount of time. 
 
- - If we allocate large amount of bytes, and then free them all, it takes significantly longer. However, this could also be due to the fact that we are using an array to store allocated pointers.
+ CASE B: If we allocate large amount of bytes, and then free them all, it takes significantly longer. However, this could also be due to the fact that we are using an array to store allocated pointers.
 
- - Randomly choosing between allocating and freeing 1 byte, until total amount of allocations is 50, and then freeing everything, takes slightly longer then testA, but much shorter than testB(probably due to the fact that we store less pointers in the array).
+ CASE C: Randomly choosing between allocating and freeing 1 byte, until total amount of allocations is 50, and then freeing everything, takes slightly longer then testA, but much shorter than testB(probably due to the fact that we store less pointers in the array).
 
- -Randomly choosing between allocating and freeing from 1 to 64 bytes, until total amount of allocations is 50, and then freeing everything, takes slightly longer than TestC, probably due to the fact that we might  have sometimes to break and stitch memory blocks.
+ CASE D: Randomly choosing between allocating and freeing from 1 to 64 bytes, until total amount of allocations is 50, and then freeing everything, takes slightly longer than TestC, probably due to the fact that we might  have sometimes to break and stitch memory blocks.
