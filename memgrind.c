@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "mymalloc.c"
+// #include "mymalloc.c"
 #include "mymalloc.h"
 
 double testcaseA() {
@@ -9,6 +9,7 @@ double testcaseA() {
     int x, y;
     double time_total = 0;
     clock_t start, end;
+    char *pointer;
     
     // take the average of 100 trials
     for (x = 0; x < 100; x++) {
@@ -20,19 +21,15 @@ double testcaseA() {
         for (y = 0; y < 150; y++) {
             
             // allocate 1 byte and immediately free it
-            char* pointer = malloc(1);
-            myfree(pointer);
+            pointer = malloc(1);
+            free(pointer);
             
-        }
-        
+        }        
         // end the timer
-        end = clock();
-        
+        end = clock();        
         // calculate the duration of a single malloc/free call and add to total
-        time_total += (double)(end - start)/CLOCKS_PER_SEC;
-        
-    }
-    
+        time_total += (double)(end - start)/CLOCKS_PER_SEC;       
+    }    
     // return the average time elapsed
     printf("%lf", time_total/100);
     return time_total/100;
@@ -44,8 +41,7 @@ double testcaseB() {
     int x, y, z, j, s=0, e=50;
     double time_total = 0;
     clock_t start, end;
-    char* pointers[150];
-    
+    char *pointers[150];   
     // take the average of 100 trials
     for(x=0; x<100; x++){
         s = 0;
@@ -58,7 +54,7 @@ double testcaseB() {
             
             //save 50 pointers in the array
             for(y=s; y<e; y++){
-                printf("%d", y);
+                // printf("%d", y);
                 
                 pointers[y] = (char*)malloc(1);
                 
@@ -70,17 +66,13 @@ double testcaseB() {
             
             //free 50 pointers one by one
             for(z=s; z<e; z++){
-                myfree(pointers[z]);
+                free(pointers[z]);
             }
             s += 50;
-            e += 50;
-            
-            //end the timer
-            
-            
+            e += 50;            
+            //end the timer                       
         }
         end = clock();
-        
         // calculate the duration of a single malloc/free call and add to total
         time_total += (double)(end - start)/CLOCKS_PER_SEC;
     }
@@ -88,5 +80,14 @@ double testcaseB() {
     printf("%lf", time_total/100);
     return time_total/100;
 }
+
+int main(int argc, char* argv[]) {
+	testcaseA();
+	testcaseB();
+	return 0;
+}
+
+
+
 
 

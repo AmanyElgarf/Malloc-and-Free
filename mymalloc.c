@@ -163,90 +163,77 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 	}
 	return NULL;
 }
-// 	double testcaseA() {
-    
-// 	    int x, y;
-// 	    double time_total = 0;
-// 	    clock_t start, end;
-	    
-// 	    // take the average of 100 trials
-// 	    for (x = 0; x < 100; x++) {
-	        
-// 	        // start the timer
-// 	        start = clock();
-	        
-// 	        // malloc/free 150 times consecutively
-// 	        for (y = 0; y < 150; y++) {
-	            
-// 	            // allocate 1 byte and immediately free it
-// 	            char* pointer = malloc(1);
-// 	            free(pointer);
-	            
-// 	        }
-	        
-// 	        // end the timer
-// 	        end = clock();
-	        
-// 	        // calculate the duration of a single malloc/free call and add to total
-// 	        time_total += (double)(end - start)/CLOCKS_PER_SEC;
-	        
-// 	    }
-	    
-// 	    // return the average time elapsed
-// 	    printf("\nMean time for testcase A is: %lf\n", time_total/100);
-// 	    return time_total/100;
-	    
-// 	}
+	double testcaseA() {
+	    int x, y;
+	    char *pointer;
+	    double time_total = 0;
+	    clock_t start, end;    
+	    // take the average of 100 trials
+	    for (x = 0; x < 100; x++) {	        
+	        // start the timer
+	        start = clock();
+	        // malloc/free 150 times consecutively
+	        for (y = 0; y < 150; y++) {	            
+	            // allocate 1 byte and immediately free it
+	            pointer = malloc(1);
+	            free(pointer);	            
+	        }	        
+	        // end the timer
+	        end = clock();	        
+	        // calculate the duration of a single malloc/free call and add to total
+	        time_total += (double)(end - start)/CLOCKS_PER_SEC;	        
+	    }	    
+	    // return the average time elapsed
+	    printf("\nMean time for testcase A is: %lf\n", time_total/100);
+	    return time_total/100;	    
+	}
 
 
-// 	double testcaseB() {
-//     int x, y, z, j, s=0, e=50;
-//     double time_total = 0;
-//     clock_t start, end;
-//     char* pointers[150];
-    
-//     // take the average of 100 trials
-//     for(x=0; x<100; x++){
-//         s = 0;
-//         e = 50;
-//         //start the timer
-//         start = clock();
-        
-//         //fill out the array in three chunks
-//         for(j=0; j<3; j++){
-            
-//             //save 50 pointers in the array
-//             for(y=s; y<e; y++){
-//                 // printf("%d", y);
-                
-//                 pointers[y] = (char*)malloc(1);
-                
-//                 //Null check in case pointer fails
-//                 if (pointers[y] == NULL) {
-//                     return -1;
-//                 }
-//             }
-            
-//             //free 50 pointers one by one
-//             for(z=s; z<e; z++){
-//                 free(pointers[z]);
-//             }
-//             s += 50;
-//             e += 50;
-            
-//             //end the timer
-            
-            
-//         }
-//         end = clock();
-        
-//         // calculate the duration of a single malloc/free call and add to total
-//         time_total += (double)(end - start)/CLOCKS_PER_SEC;
-//     }
-    
-//     printf("\nMean time for testcase B is: %lf\n", time_total/100);
-//     return time_total/100;
-// }
+	double testcaseB() {
+	    int x, y, z, j, s=0, e=50;
+	    double time_total = 0;
+	    clock_t start, end;
+	    char* pointers[150];
+	    
+	    // take the average of 100 trials
+	    for(x=0; x<100; x++){
+	        s = 0;
+	        e = 50;
+	        //start the timer
+	        start = clock();
+	        //fill out the array in three chunks
+	        for(j=0; j<3; j++){
+	            
+	            //save 50 pointers in the array
+	            for(y=s; y<e; y++){
+	                // printf("%d", y);
+	                
+	                pointers[y] = (char*)malloc(1);
+	                
+	                //Null check in case pointer fails
+	                if (pointers[y] == NULL) {
+	                    return -1;
+	                }
+	            }
+	            
+	            //free 50 pointers one by one
+	            for(z=s; z<e; z++){
+	                free(pointers[z]);
+	            }
+	            s += 50;
+	            e += 50;
+	            
+	            //end the timer
+	            
+	            
+	        }
+	        end = clock();	        
+	        // calculate the duration of a single malloc/free call and add to total
+	        time_total += (double)(end - start)/CLOCKS_PER_SEC;
+	    }   
+    printf("\nMean time for testcase B is: %lf\n", time_total/100);
+    return time_total/100;
+}
 
 
 
@@ -384,55 +371,52 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 	// int *b = malloc(1);
 
 	//TESTCASE A
-	// int counter;
-	// int superCounter;
-	// int *a;
-	// double times[100];
-	// clock_t begin;
-	// clock_t end;
-	// double time_spent=0;
-	// double mean_time;
-	// double total_time = 0;
-	// for (superCounter = 0; superCounter<100;superCounter++) {
-	// 	begin = clock();
-	// 	for (counter=0;counter<150;counter++) {
-	// 		a = malloc(1);
-	// 		free(a);
-	// 	}
-	// 	end = clock();
-	// 	time_spent =(double) (end-begin)/CLOCKS_PER_SEC;
-	// 	times[superCounter] = time_spent;
-	// 	total_time+=time_spent;
-	// 	printf("time spend is %f\n",(double)time_spent);
-	// }
-	// mean_time = (double)total_time/100;
-	// printf("mean time for case A is : %f\n",mean_time);
+// 	int counter;
+// 	int superCounter;
+// 	int *a;
+// 	double times[100];
+// 	clock_t begin;
+// 	clock_t end;
+// 	double time_spent=0;
+// 	double mean_time;
+// 	double total_time = 0;
+// 	for (superCounter = 0; superCounter<100;superCounter++) {
+// 		begin = clock();
+// 		for (counter=0;counter<150;counter++) {
+// 			a = malloc(1);
+// 			free(a);
+// 		}
+// 		end = clock();
+// 		time_spent =(double) (end-begin)/CLOCKS_PER_SEC;
+// 		times[superCounter] = time_spent;
+// 		total_time+=time_spent;
+// 		// printf("time spend is %f\n",(double)time_spent);
+// 	}
+// 	mean_time = (double)total_time/100;
+// 	printf("Mean time for case A is : %f\n",mean_time);
 
-	//TESTCASE B
-	// time_spent=0;
-	// total_time = 0;
-	// int *pointers[50];
-	// int m;
-	// for (superCounter = 0; superCounter<100;superCounter++) {
-	// 	begin = clock();
-	// 	for (m=0;m<3;m++) {
-	// 		for (counter=0;counter<50;counter++) {
-	// 			pointers[counter] = malloc(1);
-	// 		}
-	// 		for (counter=0;counter<50;counter++){
-	// 			free(pointers[counter]);
-	// 		}
-	// 	}
-	// 	end = clock();
-	// 	time_spent = (double)(end-begin)/CLOCKS_PER_SEC;
-	// 	times[superCounter]=time_spent;
-	// 	total_time+=time_spent;
-	// }
-	// mean_time = (double)total_time/100;
-	// printf("mean time for case B is : %f\n",mean_time);
-
-
-
+// 	//TESTCASE B
+// 	time_spent=0;
+// 	total_time = 0;
+// 	int *pointers[50];
+// 	int m;
+// 	for (superCounter = 0; superCounter<100;superCounter++) {
+// 		begin = clock();
+// 		for (m=0;m<3;m++) {
+// 			for (counter=0;counter<50;counter++) {
+// 				pointers[counter] = malloc(1);
+// 			}
+// 			for (counter=0;counter<50;counter++){
+// 				free(pointers[counter]);
+// 			}
+// 		}
+// 		end = clock();
+// 		time_spent = (double)(end-begin)/CLOCKS_PER_SEC;
+// 		times[superCounter]=time_spent;
+// 		total_time+=time_spent;
+// 	}
+// 	mean_time = (double)total_time/100;
+// 	printf("mean time for case B is : %f\n",mean_time);
 
 // 	return 0;
 // }
