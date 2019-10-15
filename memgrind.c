@@ -92,13 +92,14 @@ double testcaseC(){
         while(1){
             r = rand() % 2;
             if(r==0){
-                if(l == 50){break;}
+                
                 pointers[y] = (char*)malloc(1);
                 if(pointers[y] == NULL){
                     return -1;
                 }
                 y++;
                 l++;
+                if(l == 49){break;}
             }
             else{
                 if(y != 0){
@@ -140,7 +141,6 @@ double testcaseD(){
             r = rand() % 2; //randomly choose between malloc and free
             
             if(r==0){
-                if(l==50){break;}
                 capacity = rand() % 63 + 1; //choose random number between 1 and 64
                 pointers[y] = (char*)malloc(capacity);
                 if(pointers[y] == NULL){  //Null check
@@ -148,6 +148,8 @@ double testcaseD(){
                 }
                 y++;
                 l++;
+                if(l == 49){break;}
+
             }
             else{
                 if(y != 0){
