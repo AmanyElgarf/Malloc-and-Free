@@ -53,19 +53,28 @@ void myfree(void *ptr,char* filename,int lineNumber){
         }        
     }    
 }
+
 int isInitialized() {
 	int result = 0;
 	if (myblock[0]==(char)35&& myblock[1]==(char)111&&myblock[2]==(char)52&&myblock[3]==(char)241) result = 1;
 	return result;
 }
+void initialize() {
+	myblock[0]=(char)35;
+	myblock[1]=(char)111;
+	myblock[2]=(char)52;
+	myblock[3]=(char)241;
+	return;
+}
 void *mymalloc(size_t size,char* filename,int lineNumber) {
 	int k,s;
 	if (isInitialized()==0) {
+		initialize();
 	// if (!(myblock[0]==(char)35&& myblock[1]==(char)111&&myblock[2]==(char)52&&myblock[3]==(char)241)) {	
-		myblock[0]=(char)35;
-		myblock[1]=(char)111;
-		myblock[2]=(char)52;
-		myblock[3]=(char)241;	//mymalloc is called first time, so we need to assign value to mybloc[0]
+		// myblock[0]=(char)35;
+		// myblock[1]=(char)111;
+		// myblock[2]=(char)52;
+		// myblock[3]=(char)241;	//mymalloc is called first time, so we need to assign value to mybloc[0]
 		if (size>(4096-sizeof(entry)-6)) {
 			printf("%s: %d: Cannot allocate that amount of space, try asking for less.\n",filename,lineNumber);
 			return NULL;
@@ -102,9 +111,11 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						currEntry->blockSize = size;
 						currEntry->next = newEntry;
 						currEntry->free = '0';
+						// printf("%d\n",(int)(ind+sizeof(entry)));
 						return currEntry->dataPtr;
 					} else {	//block is not big enough for splitting
 						currEntry->free='0';
+						// printf("%d\n",(int)(ind+sizeof(entry)));
 						currEntry->dataPtr = &myblock[ind+sizeof(entry)];
 						return currEntry->dataPtr;
 					}
@@ -133,6 +144,7 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 							currEntry->next = anotherEntry;			//because of this linking, currEntry is now linked to anotherEntry
 							int p = (int)(ind+currEntry->blockSize+2*sizeof(entry));
 							anotherEntry->dataPtr = &(myblock[p]);
+							// printf("%d\n",(int)(ind+currEntry->blockSize+2*sizeof(entry)));
 							return anotherEntry->dataPtr;
 						} else {
 							printf("%s: %d: Error: Could not find enough memory. Returning NULL\n", filename,lineNumber);
