@@ -1,7 +1,7 @@
 TEST CASES E and F:
 
 
-Workload E:
+Test Case E:
 ----------
 
 In this workload, we first call malloc 409 times creating 409 pointer of size 10 each until the heap becomes full.
@@ -25,7 +25,7 @@ like they were before the freeing took place.
 At the end, we free every pointer in the array.
 
 
-Workload F:
+Test Case F:
 ----------
 
 This workload is similar to Workload E, but with a very big difference.
