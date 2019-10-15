@@ -82,12 +82,13 @@ double testcaseB() {
 
 
 double testcaseC(){
-    int x, r, y, h, l=0;
+    int x, r, y, h, l;
     clock_t start, end;
     char* pointers[50];
     double time_total = 0;
     for(x=0; x<100; x++){
         y=0;
+        l=0;
         start = clock();
         while(1){
             r = rand() % 2;
@@ -125,7 +126,7 @@ double testcaseC(){
 
 
 double testcaseD(){
-    int x, r, y, h, capacity, l=0;
+    int x, r, y, h, capacity, l;
     clock_t start, end;
     char* pointers[50];
     double time_total = 0;
@@ -133,6 +134,7 @@ double testcaseD(){
     // take the average of 100 trials
     for(x=0; x<100; x++){
         y=0;
+        l=0;
         
         //start the timer
         start = clock();
