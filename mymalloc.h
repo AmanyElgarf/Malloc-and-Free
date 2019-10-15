@@ -10,8 +10,14 @@
 #define SizeOfEntry sizeof(entry)
 #define sizeOfArray 4096
 static char myblock[sizeOfArray];
+typedef struct __attribute__((__packed__)) _entry {		//this struct will hold metadata, about each allocated block
+	char free;
+	int blockSize;
+	struct _entry *next;
+	void* dataPtr;	
+}entry;
+void *mymalloc(size_t size, char *filename, int line);
 
-// void *mymalloc(size_t size, char* filename, int lineNumber);
-// void *mymalloc(size_t size,char* filename, int lineNumber);
-// void myfree(void *ptr);
+void myfree(void *p, char *filename, int line);
+
 #endif

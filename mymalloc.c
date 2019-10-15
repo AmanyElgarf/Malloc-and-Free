@@ -2,14 +2,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "mymalloc.h"
+#include <time.h>
 // struct is compressed for space efficiency, so there is no padding, and it takes only 13 bytes of code
 //'free' variable is of type char - to take as little memory as possible
-typedef struct __attribute__((__packed__)) _entry {		//this struct will hold metadata, about each allocated block
-	char free;
-	int blockSize;
-	struct _entry *next;
-	void* dataPtr;	
-}entry;
+// typedef struct __attribute__((__packed__)) _entry {		//this struct will hold metadata, about each allocated block
+// 	char free;
+// 	int blockSize;
+// 	struct _entry *next;
+// 	void* dataPtr;	
+// }entry;
 void myfree(void *ptr,char* filename,int lineNumber){
     //freeing a pointer that wasn't allocated by malloc before
     int freedBytes = 0;
@@ -58,19 +59,18 @@ void myfree(void *ptr,char* filename,int lineNumber){
                 else{ curr->next = NULL;  }
             }
         }        
-        printf("freeing %d bytes\n",freedBytes);
-        printf("Success: Pointer (%p) was freed successfully.\n", ptr);
+        // printf("freeing %d bytes\n",freedBytes);
+        // printf("Success: Pointer (%p) was freed successfully.\n", ptr);
     }    
 }
 void *mymalloc(size_t size,char* filename,int lineNumber) {
-	printf("mallocing %d bytes\n",(int)size);
 	int k,s;
 	if (!(myblock[0]==(char)35&& myblock[1]==(char)111&&myblock[2]==(char)52&&myblock[3]==(char)241)) {	
 		myblock[0]=(char)35;
 		myblock[1]=(char)111;
 		myblock[2]=(char)52;
 		myblock[3]=(char)241;	//mymalloc is called first time, so we need to assign value to mybloc[0]
-		printf("The size of entry is %d\n",(int)sizeof(entry));
+		// printf("The size of entry is %d\n",(int)sizeof(entry));
 		if (size>(4096-sizeof(entry)-6)) {
 			printf("%s: %d: Cannot allocate that amount of space, try asking for less.\n",filename,lineNumber);
 			return NULL;
@@ -82,9 +82,10 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 		first_entry.blockSize= size;
 		first_entry.free = '0';
 		first_entry.next = NULL;
-		first_entry.dataPtr = &myblock[6+21];
+		first_entry.dataPtr = &myblock[6+sizeof(entry)];
+		// printf(">>>>>>>>>>>>>>>The pointer to %d bytes is at %d position\n",(int)size, (int)(6+sizeof(entry)));
 		*(entry*)(myblock+6) = first_entry;
-		printf("Allocated %d bytes at %d position. Returning pointer %p\n",(int)size,(int)(6+sizeof(entry)), first_entry.dataPtr);
+		// printf("Allocated %d bytes at %d position. Returning pointer %p\n",(int)size,(int)(6+sizeof(entry)), first_entry.dataPtr);
 		return first_entry.dataPtr;
 	} else {	//if we got here, than mymalloc was called before. Need to search whether we can find the block of 
 		entry* anotherEntry;
@@ -97,8 +98,8 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 			int ind = 6;	//this index for keeping track on what position in array myblock we currently are
 			currEntry = (entry*)&myblock[6];
 			while (1) {
-				if (currEntry->blockSize>=(size+sizeof(entry)) && currEntry->free=='1') {
-
+				// printf("currEntry's size is %d, free is %c\n",(int)currEntry->blockSize,currEntry->free);
+				if (currEntry->blockSize>=(size) && currEntry->free=='1') {
 					if (currEntry->blockSize>=(size+sizeof(entry)+1)) {	// if block is big enough to split into 2 blocks
 						int a = currEntry->blockSize-(int)size-sizeof(entry);
 						newEntry = (entry*)&myblock[ind+sizeof(entry)+size];
@@ -109,14 +110,16 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						currEntry->blockSize = size;
 						currEntry->next = newEntry;
 						currEntry->free = '0';
-						printf("location of block after %d bytes block is %d.\n",currEntry->blockSize,(int)(ind+sizeof(entry)*2+size));
-						printf("returning pointer %p for %d bytes\n",currEntry->dataPtr,currEntry->blockSize);
+						// printf("location of block after %d bytes block is %d.\n",currEntry->blockSize,(int)(ind+sizeof(entry)*2+size));
+						// printf(">>>>>>>>>>>>>>>The pointer to %d bytes is at %d position\n",(int)size, (int)(ind+sizeof(entry)));
+						// printf("returning pointer %p for %d bytes\n",currEntry->dataPtr,currEntry->blockSize);
 						return currEntry->dataPtr;
 					} else {	//block is not big enough for splitting
 						currEntry->free='0';
 						currEntry->dataPtr = &myblock[ind+sizeof(entry)];
-						printf("returning pointer %p for %d bytes\n",newEntry->dataPtr,newEntry->blockSize);
-						printf("location of %d bytes block is %d.\n",newEntry->blockSize,(int)(ind+sizeof(entry)));
+						// printf("returning pointer %p for %d bytes\n",currEntry->dataPtr,currEntry->blockSize);
+						// printf(">>>>>>>>>>>>>>>The pointer to %d bytes is at %d position\n",(int)size, (int)(ind+sizeof(entry)));
+						// printf("location of %d bytes block is %d.\n",currEntry->blockSize,(int)(ind+sizeof(entry)));
 						return currEntry->dataPtr;
 					}
 				} else {
@@ -124,9 +127,9 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						ind = ind + currEntry->blockSize+sizeof(entry);
 						currEntry = currEntry->next;	
 					} else {
-						printf("entry's size: %d,sizeof entry : %d\n",currEntry->blockSize,(int)sizeof(entry));
+						// printf("entry's size: %d,sizeof entry : %d\n",currEntry->blockSize,(int)sizeof(entry));
 						int endOfList = (int)(ind+currEntry->blockSize+sizeof(entry));
-						printf("at the end of the list. Ind is  %d, end of list is: %d\n", ind,(int)endOfList);	//reached the end of the list. Check if have enough memory at the end
+						// printf("at the end of the list. Ind is  %d, end of list is: %d\n", ind,(int)endOfList);	//reached the end of the list. Check if have enough memory at the end
 						if ((int)(endOfList+size + sizeof(entry))>4096) {
 							printf("%s: %d: Error: Not enough space left . Returning NULL\n", filename,lineNumber);
 							return NULL;
@@ -140,15 +143,17 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						anotherEntry->blockSize = s;
 						if (anotherEntry->blockSize>=size) {  //check if need to split
 							anotherEntry->free='0';
-							if (anotherEntry->blockSize>(size+sizeof(entry) +1)) { anotherEntry->blockSize = size; }
+							if (anotherEntry->blockSize>(size+sizeof(entry) +1)) { 
+								anotherEntry->blockSize = size; 
+							}
 							currEntry->next = anotherEntry;			//because of this linking, currEntry is now linked to anotherEntry
-							printf("location of %d bytes block is %d.\n",anotherEntry->blockSize,(int)(ind+sizeof(entry)*2+currEntry->blockSize));
+							// printf(">>>>>>>>>>>>>>>The pointer to %d bytes is at %d position\n",anotherEntry->blockSize,(int)(ind+sizeof(entry)*2+currEntry->blockSize));
 							int p = (int)(ind+currEntry->blockSize+2*sizeof(entry));
 							anotherEntry->dataPtr = &(myblock[p]);
-							printf("returning pointer %p\n",anotherEntry->dataPtr);
+							// printf("returning pointer %p\n",anotherEntry->dataPtr);
 							return anotherEntry->dataPtr;
 						} else {
-							printf("Could not find enough memory. Returning NULL\n");
+							printf("%s: %d: Error: Could not find enough memory. Returning NULL\n", filename,lineNumber);
 							return NULL;
 						}
 					}
@@ -158,8 +163,96 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 	}
 	return NULL;
 }
+// 	double testcaseA() {
+    
+// 	    int x, y;
+// 	    double time_total = 0;
+// 	    clock_t start, end;
+	    
+// 	    // take the average of 100 trials
+// 	    for (x = 0; x < 100; x++) {
+	        
+// 	        // start the timer
+// 	        start = clock();
+	        
+// 	        // malloc/free 150 times consecutively
+// 	        for (y = 0; y < 150; y++) {
+	            
+// 	            // allocate 1 byte and immediately free it
+// 	            char* pointer = malloc(1);
+// 	            free(pointer);
+	            
+// 	        }
+	        
+// 	        // end the timer
+// 	        end = clock();
+	        
+// 	        // calculate the duration of a single malloc/free call and add to total
+// 	        time_total += (double)(end - start)/CLOCKS_PER_SEC;
+	        
+// 	    }
+	    
+// 	    // return the average time elapsed
+// 	    printf("\nMean time for testcase A is: %lf\n", time_total/100);
+// 	    return time_total/100;
+	    
+// 	}
 
-int main(int argc, char* argv[]) {
+
+// 	double testcaseB() {
+//     int x, y, z, j, s=0, e=50;
+//     double time_total = 0;
+//     clock_t start, end;
+//     char* pointers[150];
+    
+//     // take the average of 100 trials
+//     for(x=0; x<100; x++){
+//         s = 0;
+//         e = 50;
+//         //start the timer
+//         start = clock();
+        
+//         //fill out the array in three chunks
+//         for(j=0; j<3; j++){
+            
+//             //save 50 pointers in the array
+//             for(y=s; y<e; y++){
+//                 // printf("%d", y);
+                
+//                 pointers[y] = (char*)malloc(1);
+                
+//                 //Null check in case pointer fails
+//                 if (pointers[y] == NULL) {
+//                     return -1;
+//                 }
+//             }
+            
+//             //free 50 pointers one by one
+//             for(z=s; z<e; z++){
+//                 free(pointers[z]);
+//             }
+//             s += 50;
+//             e += 50;
+            
+//             //end the timer
+            
+            
+//         }
+//         end = clock();
+        
+//         // calculate the duration of a single malloc/free call and add to total
+//         time_total += (double)(end - start)/CLOCKS_PER_SEC;
+//     }
+    
+//     printf("\nMean time for testcase B is: %lf\n", time_total/100);
+//     return time_total/100;
+// }
+
+
+
+// int main(int argc, char* argv[]) {
+// 	testcaseA();
+// 	testcaseB();
 
 	// ---------TESTCASE 1 :: freeing and allocating many times, checking if freed blocks are being stitched,
 	//  if malloc reuses freed blocks etc:
@@ -276,16 +369,72 @@ int main(int argc, char* argv[]) {
 	// int *d = malloc(1000);
 	// int *e = malloc(5);
 	// int *a = malloc(1);
+	// free(b);
+	// free(c);
+	// free(d);
+	// free(e);
+	// a = malloc(300);
+	// free(a);
 
 
 
 
-	//-----------TESTCASE3 :: testing for allocating more bytes if there are less than 1+sizeof(entry) left at the end
-	int *a = malloc(4040);
-	int *b = malloc(1);
+	// -----------TESTCASE3 :: testing for allocating more bytes if there are less than 1+sizeof(entry) left at the end
+	// int *a = malloc(4040);
+	// int *b = malloc(1);
+
+	//TESTCASE A
+	// int counter;
+	// int superCounter;
+	// int *a;
+	// double times[100];
+	// clock_t begin;
+	// clock_t end;
+	// double time_spent=0;
+	// double mean_time;
+	// double total_time = 0;
+	// for (superCounter = 0; superCounter<100;superCounter++) {
+	// 	begin = clock();
+	// 	for (counter=0;counter<150;counter++) {
+	// 		a = malloc(1);
+	// 		free(a);
+	// 	}
+	// 	end = clock();
+	// 	time_spent =(double) (end-begin)/CLOCKS_PER_SEC;
+	// 	times[superCounter] = time_spent;
+	// 	total_time+=time_spent;
+	// 	printf("time spend is %f\n",(double)time_spent);
+	// }
+	// mean_time = (double)total_time/100;
+	// printf("mean time for case A is : %f\n",mean_time);
+
+	//TESTCASE B
+	// time_spent=0;
+	// total_time = 0;
+	// int *pointers[50];
+	// int m;
+	// for (superCounter = 0; superCounter<100;superCounter++) {
+	// 	begin = clock();
+	// 	for (m=0;m<3;m++) {
+	// 		for (counter=0;counter<50;counter++) {
+	// 			pointers[counter] = malloc(1);
+	// 		}
+	// 		for (counter=0;counter<50;counter++){
+	// 			free(pointers[counter]);
+	// 		}
+	// 	}
+	// 	end = clock();
+	// 	time_spent = (double)(end-begin)/CLOCKS_PER_SEC;
+	// 	times[superCounter]=time_spent;
+	// 	total_time+=time_spent;
+	// }
+	// mean_time = (double)total_time/100;
+	// printf("mean time for case B is : %f\n",mean_time);
 
 
-	return 0;
-}
+
+
+// 	return 0;
+// }
 
 
