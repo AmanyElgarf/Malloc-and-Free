@@ -99,7 +99,7 @@ double testcaseC(){
                 }
                 y++;
                 l++;
-                if(l == 49){break;}
+                if(l == 50){break;}
             }
             else{
                 if(y != 0){
@@ -148,7 +148,7 @@ double testcaseD(){
                 }
                 y++;
                 l++;
-                if(l == 49){break;}
+                if(l == 50){break;}
 
             }
             else{
