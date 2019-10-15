@@ -3,7 +3,7 @@
 #include <time.h>
 #include "mymalloc.h"
 
-double testcaseA() {
+double testCaseA() {
     
     int x, y;
     double time_total = 0;
@@ -35,7 +35,7 @@ double testcaseA() {
 }
 
 
-double testcaseB() {
+double testCaseB() {
     int x, y, z, j, s=0, e=50;
     double time_total = 0;
     clock_t start, end;
@@ -77,7 +77,7 @@ double testcaseB() {
 
 
 
-double testcaseC(){
+double testCaseC(){
     int x, r, y, h, l;
     clock_t start, end;
     char* pointers[50];
@@ -120,7 +120,7 @@ double testcaseC(){
 }
 
 
-double testcaseD(){
+double testCaseD(){
     int x, r, y, h, capacity, l;
     clock_t start, end;
     char* pointers[50];
@@ -172,7 +172,7 @@ double testcaseD(){
 }
 
 
-double testcaseE(){
+double testCaseE(){
     int x, y, w, k, z;
     clock_t start, end;
     char* pointers[49];
@@ -214,11 +214,7 @@ double testcaseE(){
 }
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> c109d14459dbc917c1d031e5a59a03e4a5751468
-double testcaseF(){
+double testCaseF(){
     int x, y, w, k, z;
     clock_t start, end;
     char* pointers[49];
@@ -261,18 +257,12 @@ double testcaseF(){
 
 
 int main(int argc, char* argv[]) {
-	double a = testcaseA();
-	double b = testcaseB();
-	double c = testcaseC();
-	double d = testcaseD();
-	double e = testcaseE();
-	double f = testcaseF();
-    printf("Testcase A took on average %.2f microseconds to complete.\n",(double) a*1000000);
-    printf("Testcase B took on average %.2f microseconds to complete.\n", (double)b*1000000);
-    printf("Testcase C took on average %.2f microseconds to complete.\n", (double)c*1000000);
-    printf("Testcase D took on average %.2f microseconds to complete.\n", (double)d*1000000);
-    printf("Testcase E took on average %.2f microseconds to complete.\n",(double) e*1000000);
-    printf("Testcase F took on average %.2f microseconds to complete.\n", (double)f*1000000);
-	return 0;
+    printf("Testcase A took on average %.2f microseconds to complete.\n", testcaseA()*1000000);
+    printf("Testcase B took on average %.2f microseconds to complete.\n", testcaseB()*1000000);
+    printf("Testcase C took on average %.2f microseconds to complete.\n", testcaseC()*1000000);
+    printf("Testcase D took on average %.2f microseconds to complete.\n", testcaseD()*1000000);
+    printf("Testcase E took on average %.2f microseconds to complete.\n", testcaseE()*1000000);
+    printf("Testcase F took on average %.2f microseconds to complete.\n", testcaseF()*1000000);
+    return 0;
 }
 
