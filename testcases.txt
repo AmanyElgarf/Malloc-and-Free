@@ -4,8 +4,8 @@ TEST CASES E and F:
 Test Case E:
 ----------
 
-In this test case, we first call malloc 409 times creating 409 pointer of size 10 each until the heap becomes full.
-As we do this, the resulting pointers are stored inside an array called pointers[409].
+In this test case, we first call malloc until the heap becomes full.
+As we do this, the resulting pointers are stored inside an array called pointers.
 
 We then free every other pointer, starting with the first one in the heap.
 
