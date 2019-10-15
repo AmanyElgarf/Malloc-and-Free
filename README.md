@@ -26,9 +26,18 @@ The metadata is storing information about allocated space in the struct entry, t
  By looking at the reaults of first 4 testcases, we can conclude the following: 
 
  CASE A: Allocating and immidiately freeing one byte of memory many times takes relatively short amount of time. 
+ TestCase A took on average 8.94 microseconds to complete.
 
  CASE B: If we allocate large amount of bytes, and then free them all, it takes significantly longer. However, this could also be due to the fact that we are using an array to store allocated pointers.
+TestCase B took on average 35.14 microseconds to complete.
 
  CASE C: Randomly choosing between allocating and freeing 1 byte, until total amount of allocations is 50, and then freeing everything, takes slightly longer then testA, but much shorter than testB(probably due to the fact that we store less pointers in the array).
+TestCase C took on average 3.41 microseconds to complete.
 
  CASE D: Randomly choosing between allocating and freeing from 1 to 64 bytes, until total amount of allocations is 50, and then freeing everything, takes slightly longer than TestC, probably due to the fact that we might  have sometimes to break and stitch memory blocks.
+TestCase D took on average 4.09 microseconds to complete.
+
+CASES E&F are explained in the testcases.txt file.
+TestCase E took on average 9.60 microseconds to complete.
+TestCase F took on average 10.16 microseconds to complete.
+
