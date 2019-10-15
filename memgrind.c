@@ -82,51 +82,45 @@ double testcaseB() {
 
 
 double testcaseC(){
-    int x, r, y, h;
+    int x, r, y, h, l=0;
     clock_t start, end;
     char* pointers[50];
     double time_total = 0;
-    
-    // take the average of 100 trials
     for(x=0; x<100; x++){
         y=0;
-        
-        //start the timer
         start = clock();
-        
-        while(y < 50){
-            r = rand() % 2; //randomly choose between malloc and free
+        while(1){
+            r = rand() % 2;
             if(r==0){
+                if(l == 50){break;}
                 pointers[y] = (char*)malloc(1);
-                if(pointers[y] == NULL){ //Null pointer check
+                if(pointers[y] == NULL){
                     return -1;
                 }
                 y++;
+                l++;
             }
             else{
                 if(y != 0){
                     free(pointers[y-1]);
-
                     y--;
                 }
             }
         }
-        for(h=0; h<50; h++){
+        for(h=0; h<y; h++){
             free(pointers[h]);
         }
-        
-        //end the timer
         end = clock();
         
-         // calculate the duration of a single malloc/free call and add to total
+        // calculate the duration of a single malloc/free call and add to total
         time_total += (double)(end - start)/CLOCKS_PER_SEC;
 
     }
     
     // return the average time elapsed
     return time_total/100;
+    
 }
-
 
 
 double testcaseD(){
