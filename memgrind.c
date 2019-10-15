@@ -124,7 +124,7 @@ double testcaseC(){
 
 
 double testcaseD(){
-    int x, r, y, h, capacity;
+    int x, r, y, h, capacity, l=0;
     clock_t start, end;
     char* pointers[50];
     double time_total = 0;
@@ -135,17 +135,19 @@ double testcaseD(){
         
         //start the timer
         start = clock();
-        while(y < 50){
+        while(1){
             
             r = rand() % 2; //randomly choose between malloc and free
             
             if(r==0){
+                if(l==50){break;}
                 capacity = rand() % 63 + 1; //choose random number between 1 and 64
                 pointers[y] = (char*)malloc(capacity);
                 if(pointers[y] == NULL){  //Null check
                     return -1;
                 }
                 y++;
+                l++;
             }
             else{
                 if(y != 0){
@@ -154,7 +156,7 @@ double testcaseD(){
                 }
             }
         }
-        for(h=0; h<50; h++){
+        for(h=0; h<y; h++){
             free(pointers[h]);
         }
         
@@ -164,12 +166,11 @@ double testcaseD(){
         // calculate the duration of a single malloc/free call and add to total
         time_total += (double)(end - start)/CLOCKS_PER_SEC;
     }
-        
+    
     // return the average time elapsed
     return time_total/100;
     
 }
-
 
 int main(int argc, char* argv[]) {
     printf("Testcase A took on average %.2f microseconds to complete.\n", testcaseA()*1000000);
