@@ -219,7 +219,7 @@ double testcaseE(){
 }
 
 
-double testcaseE(){
+double testcaseF(){
     int x, y, w, k, z;
     clock_t start, end;
     char* pointers[49];
