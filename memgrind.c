@@ -81,6 +81,47 @@ double testcaseB() {
     return time_total/100;
 }
 
+
+
+double testcaseC(){
+    int x, r, y, h;
+    clock_t start, end;
+    char* pointers[50];
+    double time_total = 0;
+    for(x=0; x<100; x++){
+        y=0;
+        start = clock();
+        while(y < 50){
+            r = rand() % 2;
+            if(r==0){
+                pointers[y] = (char*)malloc(1);
+                if(pointers[y] == NULL){
+                    return -1;
+                }
+                y++;
+            }
+            else{
+                if(y != 0){
+                    free(pointers[y-1]);
+
+                    y--;
+                }
+            }
+        }
+        for(h=0; h<50; h++){
+            free(pointers[h]);
+        }
+        end = clock();
+        time_total += (double)(end - start)/CLOCKS_PER_SEC;
+
+    }
+    
+    printf("%lf\n", time_total/100);
+    return time_total/100;
+    
+}
+
+
 int main(int argc, char* argv[]) {
 	testcaseA();
 	testcaseB();
