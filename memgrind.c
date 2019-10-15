@@ -184,15 +184,15 @@ double testcaseE(){
     double time_total = 0;
     
     for(x=0; x<100; x++){
-        y=1;
+        y=0;
         
         //start the timer
         start = clock();
         
         pointers[0] = (char*)malloc(60);
         while(pointers[y] != NULL){
-            pointers[y] = (char*)malloc(60);
             y++;
+            pointers[y] = (char*)malloc(60);
         }
         
         //freeing each other pointer
@@ -229,15 +229,15 @@ double testcaseF(){
     double time_total = 0;
     
     for(x=0; x<100; x++){
-        y=1;
+        y=0;
         
         //start the timer
         start = clock();
         
         pointers[0] = (char*)malloc(60);
         while(pointers[y] != NULL){
-            pointers[y] = (char*)malloc(60);
             y++;
+            pointers[y] = (char*)malloc(60);
         }
         
         //freeing each other pointer
