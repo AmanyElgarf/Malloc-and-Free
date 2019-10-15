@@ -180,33 +180,30 @@ double testcaseD(){
 double testcaseE(){
     int x, y, w, k, z;
     clock_t start, end;
-    char* pointers[69];
+    char* pointers[49];
     double time_total = 0;
     
     for(x=0; x<100; x++){
-        y=0;
         
         //start the timer
         start = clock();
         
-        pointers[0] = (char*)malloc(60);
-        while(pointers[y] != NULL){
-            y++;
+        for(y=0; y<49; y++){
             pointers[y] = (char*)malloc(60);
         }
         
         //freeing each other pointer
-        for(w=0; w<y; w=w+2){
+        for(w=0; w<49; w=w+2){
             free(pointers[w]);
         }
         
         //mallocing the freed pointer with space thats different from the original one
-        for(k=0; k<y; k=k+2){
+        for(k=0; k<49; k=k+2){
             pointers[k] = (char*)malloc(50);
         }
         
         //freeinng all pointers
-        for(z=0; z<y; z++){
+        for(z=0; z<49; z++){
             free(pointers[z]);
         }
         
@@ -222,36 +219,33 @@ double testcaseE(){
 }
 
 
-double testcaseF(){
+double testcaseE(){
     int x, y, w, k, z;
     clock_t start, end;
-    char* pointers[69];
+    char* pointers[49];
     double time_total = 0;
     
     for(x=0; x<100; x++){
-        y=0;
         
         //start the timer
         start = clock();
         
-        pointers[0] = (char*)malloc(60);
-        while(pointers[y] != NULL){
-            y++;
+        for(y=0; y<49; y++){
             pointers[y] = (char*)malloc(60);
         }
         
         //freeing each other pointer
-        for(w=0; w<y; w=w+2){
+        for(w=0; w<49; w=w+2){
             free(pointers[w]);
         }
         
         //mallocing the freed pointer with space thats different from the original one
-        for(k=0; k<y; k=k+2){
+        for(k=0; k<49; k=k+2){
             pointers[k] = (char*)malloc(30);
         }
         
         //freeinng all pointers
-        for(z=0; z<y; z++){
+        for(z=0; z<49; z++){
             free(pointers[z]);
         }
         
@@ -265,6 +259,7 @@ double testcaseF(){
     // return the average time elapsed
     return time_total/100;
 }
+
 
 
 int main(int argc, char* argv[]) {
