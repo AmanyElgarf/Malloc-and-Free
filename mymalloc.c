@@ -4,6 +4,9 @@
 #include "mymalloc.h"
 #include <time.h>
 
+#define sizeOfArray 4096
+static char myblock[sizeOfArray];
+
 int isInitialized() {
 	int result = 0;
 	if (myblock[0]==(char)35&& myblock[1]==(char)111&&myblock[2]==(char)52&&myblock[3]==(char)241) result = 1;
@@ -16,6 +19,7 @@ void initialize() {
 	myblock[2]=(char)52;
 	myblock[3]=(char)241;
 	return;
+
 }
 void myfree(void *ptr,char* filename,int lineNumber){
     //freeing a pointer that wasn't allocated by malloc before
@@ -26,40 +30,40 @@ void myfree(void *ptr,char* filename,int lineNumber){
     }
     entry* head;
     head = (entry*)&myblock[6];
-    entry* new = head;
+    entry* neww = head;
     //checking if value passed is pointer to dataBlock
-    while(new->dataPtr != ptr && new->next != NULL){ new = new->next; } 
-    if(new->next == NULL && new->dataPtr != ptr){
+    while(neww->dataPtr != ptr && neww->next != NULL){ neww = neww->next; } 
+    if(neww->next == NULL && neww->dataPtr != ptr){
         printf("%s: %d: Error: (%p) is either not a pointer or a pointer that  was not allocated by malloc before.\n", filename,lineNumber,ptr);
         return;
     }
     //freeing a pointer that was already freed
-    if(new->free == '1'){
+    if(neww->free == '1'){
         printf("%s: %d: Error: pointer (%p) was freed before.\n",filename,lineNumber, ptr);
         return;
     }
     else{
-        if(new->blockSize > 4069){
+        if(neww->blockSize > 4069){
             printf("%s: %d: Error: You can't free a pointer of size more than 4090 because we are using the first six units to store inf\n",filename,lineNumber);
             return;
         }
         //add block space to total space
-        freedBytes = freedBytes+new->blockSize;
-        new->free = '1';
+        freedBytes = freedBytes+neww->blockSize;
+        neww->free = '1';
         //check for next block
-        if(new->next != NULL){
-            if(new->next->free == '1'){
-                new->blockSize = new->blockSize + new->next->blockSize+sizeof(entry) ;
-                freedBytes = new->blockSize;
-                if(new->next->next != NULL){ new->next =new->next->next; }
-                else{ new->next = NULL; }
+        if(neww->next != NULL){
+            if(neww->next->free == '1'){
+                neww->blockSize = neww->blockSize + neww->next->blockSize+sizeof(entry) ;
+                freedBytes = neww->blockSize;
+                if(neww->next->next != NULL){ neww->next =neww->next->next; }
+                else{ neww->next = NULL; }
          	}
         }
         entry* curr = head;
-        if(curr != new){
-            while(curr->next != new){ curr = curr->next; }
+        if(curr != neww){
+            while(curr->next != neww){ curr = curr->next; }
             if(curr->free =='1'){
-                curr->blockSize = curr->blockSize + new->blockSize+sizeof(entry);
+                curr->blockSize = curr->blockSize + neww->blockSize+sizeof(entry);
                 freedBytes = curr->blockSize;
                 if(curr->next->next != NULL){ curr->next =curr->next->next; }
                 else{ curr->next = NULL;  }
@@ -98,8 +102,8 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 			int ind = 6;	//this index for keeping track on what position in array myblock we currently are
 			currEntry = (entry*)&myblock[6];
 			while (1) {
-				if (currEntry->blockSize>=(size) && currEntry->free=='1') {
-					if (currEntry->blockSize>=(size+sizeof(entry)+1)) {	// if block is big enough to split into 2 blocks
+				if (currEntry->blockSize>=(int)(size) && currEntry->free=='1') {
+					if (currEntry->blockSize>=(int)(size+sizeof(entry)+1)) {	// if block is big enough to split into 2 blocks
 						int a = currEntry->blockSize-(int)size-sizeof(entry);
 						newEntry = (entry*)&myblock[ind+sizeof(entry)+size];
 						newEntry->blockSize = a;
@@ -132,9 +136,9 @@ void *mymalloc(size_t size,char* filename,int lineNumber) {
 						k = (int)currEntry->blockSize;
 						s = 4096-( ind + 2*(int)sizeof(entry)+k);
 						anotherEntry->blockSize = s;
-						if (anotherEntry->blockSize>=size) {  //check if need to split
+						if (anotherEntry->blockSize>=(int)size) {  //check if need to split
 							anotherEntry->free='0';
-							if (anotherEntry->blockSize>(size+sizeof(entry) +1)) { 
+							if (anotherEntry->blockSize>(int)(size+sizeof(entry) +1)) { 
 								anotherEntry->blockSize = size; 
 							}
 							currEntry->next = anotherEntry;			//because of this linking, currEntry is now linked to anotherEntry

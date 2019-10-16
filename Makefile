@@ -11,7 +11,7 @@ memgrind: mymalloc.c memgrind.c
 	$(CC) $(CFLAGS) -o memgrind memgrind.c mymalloc.o
 
 clean: 
-	rm -f *.o memgrind
+	rm -f *.o memgrind mymalloc.o
 # =======
 # CC = gcc
 # CCFLAGS = -Wall
