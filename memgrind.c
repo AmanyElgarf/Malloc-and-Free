@@ -3,18 +3,27 @@
 #include <time.h>
 #include "mymalloc.h"
 
-double testcaseA() {
+double testCaseA() {
     
     int x, y;
     double time_total = 0;
+<<<<<<< HEAD
     time_t start,end;
+=======
+    struct timeval start;
+    struct timeval end;    
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
     char *pointer;
     
     // take the average of 100 trials
     for (x = 0; x < 100; x++) {
         
         // start the timer
+<<<<<<< HEAD
         start = time(NULL);
+=======
+        gettimeofday(&start, 0);
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         
         // malloc/free 150 times consecutively
         for (y = 0; y < 150; y++) {
@@ -24,10 +33,16 @@ double testcaseA() {
             free(pointer);
             
         }        
+<<<<<<< HEAD
         // end the timer
         end = time(NULL);        
+=======
+       //end the timer
+        gettimeofday(&end, 0);
+        
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         // calculate the duration of a single malloc/free call and add to total
-        time_total += (double)(end - start)/CLOCKS_PER_SEC;       
+        time_total +=((end.tv_sec-start.tv_sec)*1000000 + (end.tv_usec-start.tv_usec));      
     }    
     // return the average time elapsed
     return time_total/100;
@@ -35,17 +50,26 @@ double testcaseA() {
 }
 
 
-double testcaseB() {
+double testCaseB() {
     int x, y, z, j, s=0, e=50;
     double time_total = 0;
+<<<<<<< HEAD
     time_t start, end;
+=======
+    struct timeval start;
+    struct timeval end;
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
     char *pointers[50]; //  
     // take the average of 100 trials
     for(x=0; x<100; x++){
         s = 0;
         e = 50;
         //start the timer
+<<<<<<< HEAD
         start = time(NULL);
+=======
+        gettimeofday(&start, 0);
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         
         //fill out the array in three chunks
         for(j=0; j<3; j++){
@@ -65,11 +89,16 @@ double testcaseB() {
             for(z=s; z<e; z++){
                 free(pointers[z]);
             }          
-            //end the timer                       
         }
+<<<<<<< HEAD
         end = time(NULL);
+=======
+        //end the timer
+        gettimeofday(&end, 0);
+        
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         // calculate the duration of a single malloc/free call and add to total
-        time_total += (double)(end - start)/CLOCKS_PER_SEC;
+        time_total +=((end.tv_sec-start.tv_sec)*1000000 + (end.tv_usec-start.tv_usec));
     }
     
     return time_total/100;
@@ -77,15 +106,24 @@ double testcaseB() {
 
 
 
-double testcaseC(){
+double testCaseC(){
     int x, r, y, h, l;
+<<<<<<< HEAD
     time_t start, end;
+=======
+    struct timeval start;
+    struct timeval end;
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
     char* pointers[50];
     double time_total = 0;
     for(x=0; x<100; x++){
         y=0;
         l=0;
+<<<<<<< HEAD
         start = time(NULL);
+=======
+        gettimeofday(&start, 0);
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         while(1){
             r = rand() % 2;
             if(r==0){
@@ -108,10 +146,15 @@ double testcaseC(){
         for(h=0; h<y; h++){
             free(pointers[h]);
         }
+<<<<<<< HEAD
         end = time(NULL);
+=======
+       //end the timer
+        gettimeofday(&end, 0);
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         
         // calculate the duration of a single malloc/free call and add to total
-        time_total += (double)(end - start)/CLOCKS_PER_SEC;
+        time_total +=((end.tv_sec-start.tv_sec)*1000000 + (end.tv_usec-start.tv_usec));
 
     }
     
@@ -120,9 +163,14 @@ double testcaseC(){
 }
 
 
-double testcaseD(){
+double testCaseD(){
     int x, r, y, h, capacity, l;
+<<<<<<< HEAD
     time_t start, end;
+=======
+    struct timeval start;
+    struct timeval end;
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
     char* pointers[50];
     double time_total = 0;
     
@@ -132,7 +180,11 @@ double testcaseD(){
         l=0;
         
         //start the timer
+<<<<<<< HEAD
         start = time(NULL);
+=======
+        gettimeofday(&start, 0);
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         while(1){
             
             r = rand() % 2; //randomly choose between malloc and free
@@ -159,11 +211,16 @@ double testcaseD(){
             free(pointers[h]);
         }
         
+<<<<<<< HEAD
         //end the timer
         end = time(NULL);
+=======
+       //end the timer
+        gettimeofday(&end, 0);
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         
         // calculate the duration of a single malloc/free call and add to total
-        time_total += (double)(end - start)/CLOCKS_PER_SEC;
+        time_total +=((end.tv_sec-start.tv_sec)*1000000 + (end.tv_usec-start.tv_usec));
     }
     
     // return the average time elapsed
@@ -172,16 +229,25 @@ double testcaseD(){
 }
 
 
-double testcaseE(){
+double testCaseE(){
     int x, y, w, k, z;
+<<<<<<< HEAD
     time_t start, end;
+=======
+    struct timeval start;
+    struct timeval end;
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
     char* pointers[49];
     double time_total = 0;
     
     for(x=0; x<100; x++){
         
         //start the timer
+<<<<<<< HEAD
         start = time(NULL);
+=======
+        gettimeofday(&start, 0);
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         
         for(y=0; y<49; y++){
             pointers[y] = (char*)malloc(60);
@@ -202,11 +268,16 @@ double testcaseE(){
             free(pointers[z]);
         }
         
+<<<<<<< HEAD
         //end the timer
         end = time(NULL);
+=======
+       //end the timer
+        gettimeofday(&end, 0);
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         
         // calculate the duration of a single malloc/free call and add to total
-        time_total += (double)(end - start)/CLOCKS_PER_SEC;
+        time_total +=((end.tv_sec-start.tv_sec)*1000000 + (end.tv_usec-start.tv_usec));
     }
     
     // return the average time elapsed
@@ -214,16 +285,27 @@ double testcaseE(){
 }
 
 
+<<<<<<< HEAD
 double testcaseF(){
     int x, y, w, k, z;
     time_t start, end;
+=======
+double testCaseF(){
+    int x, y, w, k, z;
+    struct timeval start;
+    struct timeval end;
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
     char* pointers[49];
     double time_total = 0;
     
     for(x=0; x<100; x++){
         
         //start the timer
+<<<<<<< HEAD
         start = time(NULL);
+=======
+        gettimeofday(&start, 0);
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         
         for(y=0; y<49; y++){
             pointers[y] = (char*)malloc(60);
@@ -244,11 +326,16 @@ double testcaseF(){
             free(pointers[z]);
         }
         
+<<<<<<< HEAD
         //end the timer
         end = time(NULL);
+=======
+       //end the timer
+        gettimeofday(&end, 0);
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
         
         // calculate the duration of a single malloc/free call and add to total
-        time_total += (double)(end - start)/CLOCKS_PER_SEC;
+        time_total +=((end.tv_sec-start.tv_sec)*1000000 + (end.tv_usec-start.tv_usec));
     }
     
     // return the average time elapsed
@@ -257,18 +344,12 @@ double testcaseF(){
 
 
 int main(int argc, char* argv[]) {
-	double a = testcaseA();
-	double b = testcaseB();
-	double c = testcaseC();
-	double d = testcaseD();
-	double e = testcaseE();
-	double f = testcaseF();
-    printf("Testcase A took on average %.2f microseconds to complete.\n",(double) a*1000000);
-    printf("Testcase B took on average %.2f microseconds to complete.\n", (double)b*1000000);
-    printf("Testcase C took on average %.2f microseconds to complete.\n", (double)c*1000000);
-    printf("Testcase D took on average %.2f microseconds to complete.\n", (double)d*1000000);
-    printf("Testcase E took on average %.2f microseconds to complete.\n",(double) e*1000000);
-    printf("Testcase F took on average %.2f microseconds to complete.\n", (double)f*1000000);
-	return 0;
+    printf("Testcase A took on average %.2f microseconds to complete.\n", testCaseA());
+    printf("Testcase B took on average %.2f microseconds to complete.\n", testCaseB());
+    printf("Testcase C took on average %.2f microseconds to complete.\n", testCaseC());
+    printf("Testcase D took on average %.2f microseconds to complete.\n", testCaseD());
+    printf("Testcase E took on average %.2f microseconds to complete.\n", testCaseE());
+    printf("Testcase F took on average %.2f microseconds to complete.\n", testCaseF());
+    return 0;
 }
 

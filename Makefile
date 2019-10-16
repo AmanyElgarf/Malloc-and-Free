@@ -1,5 +1,5 @@
 CC = gcc 
-CFLAGS = -g -Wall 
+CFLAGS = -g 
 
 all: memgrind
 
@@ -11,6 +11,7 @@ memgrind: mymalloc.c memgrind.c
 	$(CC) $(CFLAGS) -o memgrind memgrind.c mymalloc.o
 
 clean: 
+<<<<<<< HEAD
 	rm -f *.o memgrind mymalloc.o
 # =======
 # CC = gcc
@@ -24,3 +25,6 @@ clean:
 # clean:
 # 	rm memgrind
 # >>>>>>> a676ee8e6b5f24b01a348a7a9f9ae0cfc92811b0
+=======
+	rm -f *.o memgrind
+>>>>>>> ce26c9a9e8b5d348bfc8b3315be2bab65a97fe02
